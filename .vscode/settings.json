@@ -1,0 +1,8 @@
+{
+  "jest.jestCommandLine": "npm test --",
+  "jest.autoRun": "off",
+  "jest.showCoverageOnLoad": false,
+  "jest.testExplorer": {
+    "showInlineError": true
+  }
+}

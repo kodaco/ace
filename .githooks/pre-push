@@ -1,0 +1,13 @@
+#!/bin/sh
+set -e
+
+echo "Running pre-push checks..."
+
+# 1. Production build
+echo ""
+echo "1/1  Building application..."
+yarn build
+echo "     Build passed."
+
+echo ""
+echo "Pre-push checks passed."

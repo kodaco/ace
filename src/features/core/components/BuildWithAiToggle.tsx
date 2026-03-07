@@ -55,27 +55,27 @@ export function BuildWithAiToggle({
       </Box>
       <Box sx={{ px: 2, pb: expanded ? 0 : 2 }}>
         <Typography variant="body2" color="text.secondary">
-          Use AI-assisted tools to speed up development — but keep in mind that
-          AI-generated work may need more hands-on maintenance down the road.
+          AI-assisted development reduces build time by about 25%, but expect
+          higher ongoing maintenance costs as a tradeoff.
         </Typography>
       </Box>
       <Collapse in={expanded}>
         <Divider sx={{ mx: 2 }} />
-        <Box sx={{ px: 2, py: 1.5 }}>
-          <Typography variant="body2" color="text.secondary" gutterBottom>
-            AI coding assistants can help developers write code faster, generate
-            boilerplate, and prototype features more quickly. This can
-            meaningfully reduce the initial build time for most features.
+        <Box sx={{ px: 2, py: 2 }}>
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5 }}>
+            <Box component="span" sx={{ fontWeight: 600, color: "text.primary" }}>Development speed:</Box>
+            {" "}AI coding tools are most effective on standard, repeatable work
+            like screens, forms, and common features. They tend to save less
+            time on complex or custom functionality that requires more careful thinking.
           </Typography>
-          <Typography variant="body2" color="text.secondary" gutterBottom>
-            However, AI-generated code often requires more careful review,
-            testing, and refactoring to meet production standards. Over time,
-            this can lead to higher maintenance costs as the codebase may need
-            more frequent cleanup, bug fixes, and updates to keep things running
-            smoothly.
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5 }}>
+            <Box component="span" sx={{ fontWeight: 600, color: "text.primary" }}>Maintenance costs:</Box>
+            {" "}AI-generated code often needs more cleanup, debugging, and
+            rework over time. Studies show developers spend more hours fixing
+            issues in AI-written code than in carefully hand-written code.
           </Typography>
           <Typography variant="body2" sx={{ fontWeight: 500 }}>
-            In short: faster to build, but plan for a bit more upkeep.
+            In short: faster to build, but plan for more upkeep down the road.
           </Typography>
         </Box>
       </Collapse>

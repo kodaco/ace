@@ -6,5 +6,9 @@ export interface EstimateResult {
   maxCost: number;
   minWeeks: number;
   maxWeeks: number;
+  maintMinHours: number;
+  maintMaxHours: number;
+  maintMinCost: number;
+  maintMaxCost: number;
   featureCount: number;
 }

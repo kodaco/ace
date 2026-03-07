@@ -24,18 +24,14 @@ export function calculateEstimate(
     devMaxHours += feature.maxHours * devMultiplier;
   }
 
-  const maintPctMin = buildWithAi
-    ? AI_MAINTENANCE_PERCENT_MIN
-    : MAINTENANCE_PERCENT_MIN;
-  const maintPctMax = buildWithAi
-    ? AI_MAINTENANCE_PERCENT_MAX
-    : MAINTENANCE_PERCENT_MAX;
+  const maintPctMin = buildWithAi ? AI_MAINTENANCE_PERCENT_MIN : MAINTENANCE_PERCENT_MIN;
+  const maintPctMax = buildWithAi ? AI_MAINTENANCE_PERCENT_MAX : MAINTENANCE_PERCENT_MAX;
 
-  const maintMinHours = devMinHours * (maintPctMin / 100);
-  const maintMaxHours = devMaxHours * (maintPctMax / 100);
+  const maintMinHours = Math.round(devMinHours * (maintPctMin / 100));
+  const maintMaxHours = Math.round(devMaxHours * (maintPctMax / 100));
 
-  const totalMinHours = Math.round(devMinHours + maintMinHours);
-  const totalMaxHours = Math.round(devMaxHours + maintMaxHours);
+  const totalMinHours = Math.round(devMinHours);
+  const totalMaxHours = Math.round(devMaxHours);
 
   return {
     hourlyRate,
@@ -45,6 +41,10 @@ export function calculateEstimate(
     maxCost: totalMaxHours * hourlyRate,
     minWeeks: totalMinHours / HOURS_PER_WEEK,
     maxWeeks: totalMaxHours / HOURS_PER_WEEK,
+    maintMinHours,
+    maintMaxHours,
+    maintMinCost: maintMinHours * hourlyRate,
+    maintMaxCost: maintMaxHours * hourlyRate,
     featureCount: selectedFeatures.length,
   };
 }

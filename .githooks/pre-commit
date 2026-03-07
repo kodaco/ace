@@ -1,0 +1,19 @@
+#!/bin/sh
+set -e
+
+echo "Running pre-commit checks..."
+
+# 1. Lint
+echo ""
+echo "1/2  Linting..."
+yarn lint
+echo "     Lint passed."
+
+# 2. Tests + coverage
+echo ""
+echo "2/2  Running tests with coverage..."
+yarn test
+echo "     Tests passed."
+
+echo ""
+echo "Pre-commit checks passed."
