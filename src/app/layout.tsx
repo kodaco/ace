@@ -22,10 +22,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-  modal,
+  // modal,
 }: Readonly<{
   children: React.ReactNode;
-  modal: React.ReactNode;
+  // modal: React.ReactNode;
 }>) {
   return (
     <html lang="en">
@@ -33,7 +33,7 @@ export default function RootLayout({
         <ThemeRegistry>
           <AppHeader />
           <main style={{ flex: 1 }}>{children}</main>
-          {modal}
+          {/* {modal} */}
           <AppFooter />
         </ThemeRegistry>
       </body>
