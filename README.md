@@ -1,4 +1,4 @@
-# App Cost Estimator
+# ace: The App Cost Estimator
 
 A free, privacy-first web tool that helps entrepreneurs, product owners, and developers estimate the cost and timeline of building a software application.
 

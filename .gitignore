@@ -24,9 +24,6 @@
 .DS_Store
 *.pem
 
-# claude code
-.claude/
-
 # lock files (keep yarn.lock, ignore npm)
 package-lock.json
 

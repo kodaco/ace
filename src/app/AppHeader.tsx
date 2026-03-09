@@ -91,7 +91,7 @@ export function AppHeader() {
                 WebkitTextFillColor: "transparent",
               }}
             >
-              App Cost Estimator
+              ace
             </Typography>
             <Chip
               label="Free"
@@ -168,7 +168,7 @@ export function AppHeader() {
         anchor="right"
         open={drawerOpen}
         onClose={/* istanbul ignore next */ () => setDrawerOpen(false)}
-        PaperProps={{ sx: { width: 260 } }}
+        slotProps={{ paper:{ sx: { width: 260 } }}}
       >
         <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", px: 2, py: 1.5 }}>
           <Typography variant="subtitle1" fontWeight={600}>
@@ -200,17 +200,17 @@ export function AppHeader() {
           </ListItem>
           <ListItem disablePadding>
             <ListItemButton component={Link} href="/faq" onClick={() => setDrawerOpen(false)}>
-              <ListItemText primary="FAQs" primaryTypographyProps={{ fontWeight: 500 }} />
+              <ListItemText primary="FAQs" slotProps={{ primary: { fontWeight: 500} }} />
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding>
             <ListItemButton onClick={handleGotchasClick}>
-              <ListItemText primary="Before You Build" primaryTypographyProps={{ fontWeight: 500 }} />
+              <ListItemText primary="Before You Build" slotProps={{ primary: { fontWeight: 500} }} />
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding>
             <ListItemButton component={Link} href="/providers" onClick={() => setDrawerOpen(false)}>
-              <ListItemText primary="Service Providers" primaryTypographyProps={{ fontWeight: 500 }} />
+              <ListItemText primary="Service Providers" slotProps={{ primary: { fontWeight: 500} }} />
             </ListItemButton>
           </ListItem>
         </List>
@@ -227,7 +227,7 @@ export function AppHeader() {
               onClick={() => setDrawerOpen(false)}
             >
               <GitHubIcon fontSize="small" sx={{ mr: 1.5, color: "text.secondary" }} />
-              <ListItemText primary="GitHub" primaryTypographyProps={{ fontWeight: 500 }} />
+              <ListItemText primary="GitHub" slotProps={{ primary: { fontWeight: 500} }} />
             </ListItemButton>
           </ListItem>
         </List>

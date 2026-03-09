@@ -20,9 +20,9 @@ describe("BackLink", () => {
     expect(link).toHaveAttribute("href", "/");
   });
 
-  it("shows the text 'Back to App Cost Estimator'", () => {
+  it("shows the text 'Back to home'", () => {
     render(<BackLink />);
-    expect(screen.getByText("Back to App Cost Estimator")).toBeInTheDocument();
+    expect(screen.getByText("Back to home")).toBeInTheDocument();
   });
 
   it("renders an arrow icon (link element exists)", () => {

@@ -11,7 +11,7 @@ export function TermsContent() {
       {[
         {
           heading: "Acceptance of Terms",
-          body: "By using App Cost Estimator, you agree to these terms. If you do not agree, please do not use the tool.",
+          body: "By using ace, you agree to these terms. If you do not agree, please do not use the tool.",
         },
         {
           heading: "Nature of Estimates",
@@ -23,7 +23,7 @@ export function TermsContent() {
         },
         {
           heading: "Limitation of Liability",
-          body: "To the fullest extent permitted by law, App Cost Estimator and its creators shall not be liable for any direct, indirect, incidental, or consequential damages arising from your use of, or reliance on, the estimates produced by this tool.",
+          body: "To the fullest extent permitted by law, ace and its creators shall not be liable for any direct, indirect, incidental, or consequential damages arising from your use of, or reliance on, the estimates produced by this tool.",
         },
         {
           heading: "Intellectual Property",

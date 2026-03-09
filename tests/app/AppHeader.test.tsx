@@ -18,9 +18,9 @@ beforeEach(() => {
 });
 
 describe("AppHeader", () => {
-  it("renders the 'App Cost Estimator' logo text", () => {
+  it("renders the 'ace' logo text", () => {
     render(<AppHeader />);
-    expect(screen.getByText("App Cost Estimator")).toBeInTheDocument();
+    expect(screen.getByText("ace")).toBeInTheDocument();
   });
 
   it("renders the 'Free' chip", () => {

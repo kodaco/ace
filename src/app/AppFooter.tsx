@@ -35,11 +35,11 @@ export function AppFooter() {
               <CalculateOutlinedIcon
                 sx={{ fontSize: 22, color: "#818cf8" }}
               />
-              <Typography
+              <Typography 
                 variant="subtitle1"
                 sx={{ fontWeight: 700, color: "rgba(255,255,255,0.9)", letterSpacing: "-0.01em" }}
               >
-                App Cost Estimator
+                ace
               </Typography>
             </Box>
             <Typography variant="body2" sx={{ lineHeight: 1.6, color: "rgba(255,255,255,0.4)" }}>
@@ -155,10 +155,10 @@ export function AppFooter() {
           spacing={1}
         >
           <Typography variant="caption" sx={{ color: "rgba(255,255,255,0.3)" }}>
-            © {year} App Cost Estimator. Estimates are for planning purposes only.
+            © {year} ace estimates are for planning purposes only.
           </Typography>
           <Typography variant="caption" sx={{ color: "rgba(255,255,255,0.25)" }}>
-            Built with Next.js &amp; MUI
+            Built by koda co., Sun & Prairie Studios
           </Typography>
         </Stack>
       </Container>

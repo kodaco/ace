@@ -21,7 +21,7 @@ export function BackLink() {
       }}
     >
       <ArrowBackIcon fontSize="inherit" />
-      Back to App Cost Estimator
+      Back to home
     </Box>
   );
 }

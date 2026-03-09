@@ -7,7 +7,7 @@ export function AboutContent() {
       {[
         {
           heading: "What is this?",
-          body: "App Cost Estimator is a free tool for getting a ballpark cost on a software project, whether that's a mobile app, a web app, or a website. Pick the features you need, plug in an hourly rate, and get a number in under a minute. No signup, no sales calls.",
+          body: "ace is a free tool for getting a ballpark cost on a software project, whether that's a mobile app, a web app, or a website. Pick the features you need, plug in an hourly rate, and get a number in under a minute. No signup, no sales calls.",
         },
         {
           heading: "Who is it for?",

@@ -86,7 +86,7 @@ function PhoneMockup() {
           <Typography
             sx={{ color: "#fff", fontWeight: 700, fontSize: "0.8rem", letterSpacing: "0.02em" }}
           >
-            App Cost Estimator
+            ACE
           </Typography>
 
           {/* Mock cost display */}
@@ -104,7 +104,7 @@ function PhoneMockup() {
               Estimated Cost
             </Typography>
             <Typography sx={{ color: "#fff", fontWeight: 700, fontSize: "1.1rem", mt: 0.25 }}>
-              ~$84,000
+              ~$12,000
             </Typography>
           </Box>
 

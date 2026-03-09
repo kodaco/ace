@@ -18,9 +18,9 @@ describe("AppFooter", () => {
     render(<AppFooter />);
   });
 
-  it("renders the 'App Cost Estimator' brand name", () => {
+  it("renders the 'ace' brand name", () => {
     // The brand name appears in the footer logo area (subtitle1 Typography)
-    expect(screen.getAllByText("App Cost Estimator").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("ace").length).toBeGreaterThan(0);
   });
 
   it("renders the current year in the copyright notice", () => {

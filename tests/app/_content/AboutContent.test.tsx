@@ -57,7 +57,7 @@ describe("AboutContent", () => {
     it("shows body text for 'What is this?'", () => {
       render(<AboutContent />);
       expect(
-        screen.getByText(/App Cost Estimator is a free tool/i)
+        screen.getByText(/ace is a free tool/i)
       ).toBeInTheDocument();
     });
 

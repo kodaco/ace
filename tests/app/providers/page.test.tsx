@@ -22,9 +22,9 @@ describe("ProvidersPage", () => {
       ).toBeInTheDocument();
     });
 
-    it("renders 'Back to App Cost Estimator' back link", () => {
+    it("renders 'Back to home' back link", () => {
       render(<ProvidersPage />);
-      expect(screen.getByText("Back to App Cost Estimator")).toBeInTheDocument();
+      expect(screen.getByText("Back to home")).toBeInTheDocument();
     });
   });
 
