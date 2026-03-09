@@ -71,14 +71,14 @@ export function AppHeader() {
             href="/"
             sx={{ display: "flex", alignItems: "center", gap: 1, flexGrow: 1, textDecoration: "none" }}
           >
-            <CalculateOutlinedIcon
+            {/* <CalculateOutlinedIcon
               sx={{
                 fontSize: 26,
                 background: "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
               }}
-            />
+            /> */}
             <Typography
               variant="h6"
               component="div"
@@ -118,9 +118,9 @@ export function AppHeader() {
             <Button size="small" component={Link} href="/faq" sx={navBtnSx}>
               FAQs
             </Button>
-            <Button size="small" component={Link} href="/providers" sx={navBtnSx}>
+            {/* <Button size="small" component={Link} href="/providers" sx={navBtnSx}>
               Providers
-            </Button>            
+            </Button>             */}
             <Button
               size="small"
               variant="contained"
@@ -138,7 +138,7 @@ export function AppHeader() {
               Calculator
             </Button>
             <Button
-              href="https://github.com"
+              href="https://github.com/kodaco/ace"
               target="_blank"
               rel="noopener noreferrer"
               size="small"
@@ -208,11 +208,11 @@ export function AppHeader() {
               <ListItemText primary="Before You Build" slotProps={{ primary: { fontWeight: 500} }} />
             </ListItemButton>
           </ListItem>
-          <ListItem disablePadding>
+          {/* <ListItem disablePadding>
             <ListItemButton component={Link} href="/providers" onClick={() => setDrawerOpen(false)}>
               <ListItemText primary="Service Providers" slotProps={{ primary: { fontWeight: 500} }} />
             </ListItemButton>
-          </ListItem>
+          </ListItem> */}
         </List>
 
         <Divider />
@@ -221,7 +221,7 @@ export function AppHeader() {
           <ListItem disablePadding>
             <ListItemButton
               component="a"
-              href="https://github.com"
+              href="https://github.com/kodaco/ace"
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => setDrawerOpen(false)}

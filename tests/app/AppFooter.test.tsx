@@ -44,9 +44,9 @@ describe("AppFooter", () => {
     expect(screen.getByText("Before You Build")).toBeInTheDocument();
   });
 
-  it("renders the 'Service Providers' tool link", () => {
-    expect(screen.getByText("Service Providers")).toBeInTheDocument();
-  });
+  // it("renders the 'Service Providers' tool link", () => {
+  //   expect(screen.getByText("Service Providers")).toBeInTheDocument();
+  // });
 
   it("renders the 'Privacy' legal link", () => {
     expect(screen.getByText("Privacy")).toBeInTheDocument();
@@ -60,7 +60,7 @@ describe("AppFooter", () => {
     expect(screen.getByText("References")).toBeInTheDocument();
   });
 
-  it("renders the 'Built by koda co., Sun & Prairie Studios' attribution", () => {
-    expect(screen.getByText('Built by koda co., Sun & Prairie Studios')).toBeInTheDocument();
+  it("renders the 'Designed by koda co., Sun & Prairie Studios' attribution", () => {
+    expect(screen.getByText('Designed by koda co., Sun & Prairie Studios')).toBeInTheDocument();
   });
 });

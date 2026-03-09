@@ -96,14 +96,14 @@ export function AppFooter() {
                     Before You Build
                   </Typography>
                 </Link>
-                <Link href="/providers" style={{ textDecoration: "none" }}>
+                {/* <Link href="/providers" style={{ textDecoration: "none" }}>
                   <Typography
                     variant="body2"
                     sx={{ color: "rgba(255,255,255,0.5)", transition: "color 0.15s", "&:hover": { color: "rgba(255,255,255,0.9)" } }}
                   >
                     Service Providers
                   </Typography>
-                </Link>
+                </Link> */}
               </Stack>
             </Box>
 
@@ -158,7 +158,7 @@ export function AppFooter() {
             © {year} ace estimates are for planning purposes only.
           </Typography>
           <Typography variant="caption" sx={{ color: "rgba(255,255,255,0.25)" }}>
-            Built by koda co., Sun & Prairie Studios
+            Designed by koda co., Sun & Prairie Studios
           </Typography>
         </Stack>
       </Container>

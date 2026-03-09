@@ -28,11 +28,11 @@ describe("AppHeader", () => {
     expect(screen.getByText("Free")).toBeInTheDocument();
   });
 
-  it("desktop nav has a 'Providers' link", () => {
-    render(<AppHeader />);
-    // There may be multiple links with this text (desktop + drawer); at least one must exist
-    expect(screen.getAllByText("Providers").length).toBeGreaterThan(0);
-  });
+  // it("desktop nav has a 'Providers' link", () => {
+  //   render(<AppHeader />);
+  //   // There may be multiple links with this text (desktop + drawer); at least one must exist
+  //   expect(screen.getAllByText("Providers").length).toBeGreaterThan(0);
+  // });
 
   it("desktop nav has a 'Before you build' link", () => {
     render(<AppHeader />);
@@ -147,14 +147,14 @@ describe("AppHeader", () => {
       expect(screen.getAllByText("FAQs").length).toBeGreaterThan(0);
     });
 
-    it("drawer contains 'Service Providers' item", async () => {
-      const user = userEvent.setup();
-      render(<AppHeader />);
+    // it("drawer contains 'Service Providers' item", async () => {
+    //   const user = userEvent.setup();
+    //   render(<AppHeader />);
 
-      await user.click(screen.getByRole("button", { name: "Open menu" }));
+    //   await user.click(screen.getByRole("button", { name: "Open menu" }));
 
-      expect(screen.getByText("Service Providers")).toBeInTheDocument();
-    });
+    //   expect(screen.getByText("Service Providers")).toBeInTheDocument();
+    // });
 
     it("drawer contains 'GitHub' link", async () => {
       const user = userEvent.setup();
@@ -193,15 +193,15 @@ describe("AppHeader", () => {
       expect(screen.getByRole("button", { name: "Open menu" })).toBeInTheDocument();
     });
 
-    it("clicking 'Service Providers' in drawer calls setDrawerOpen(false)", async () => {
-      const user = userEvent.setup();
-      render(<AppHeader />);
+    // it("clicking 'Service Providers' in drawer calls setDrawerOpen(false)", async () => {
+    //   const user = userEvent.setup();
+    //   render(<AppHeader />);
 
-      await user.click(screen.getByRole("button", { name: "Open menu" }));
-      await user.click(screen.getByText("Service Providers"));
+    //   await user.click(screen.getByRole("button", { name: "Open menu" }));
+    //   await user.click(screen.getByText("Service Providers"));
 
-      expect(screen.getByRole("button", { name: "Open menu" })).toBeInTheDocument();
-    });
+    //   expect(screen.getByRole("button", { name: "Open menu" })).toBeInTheDocument();
+    // });
 
     it("clicking 'GitHub' in drawer calls setDrawerOpen(false)", async () => {
       const user = userEvent.setup();

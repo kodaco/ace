@@ -48,7 +48,7 @@ export function HourlyRateInput({ value, onChange }: HourlyRateInputProps) {
           <Typography variant="subtitle1" fontWeight={600}>
             Hourly Rate
           </Typography>
-          <Typography
+          {/* <Typography
             component={Link}
             href="/providers"
             variant="body2"
@@ -61,7 +61,7 @@ export function HourlyRateInput({ value, onChange }: HourlyRateInputProps) {
             }}
           >
             View provider rates →
-          </Typography>
+          </Typography> */}
         </Box>
 
         {editing ? (
@@ -114,9 +114,9 @@ export function HourlyRateInput({ value, onChange }: HourlyRateInputProps) {
           </Box>
         )}
 
-        <Typography variant="caption" color="text.secondary" sx={{ display: "block", mt: 1.5, lineHeight: 1.5 }}>
+        {/* <Typography variant="caption" color="text.secondary" sx={{ display: "block", mt: 1.5, lineHeight: 1.5 }}>
           Not sure what to enter? View local provider rates to see what teams in your area typically charge.
-        </Typography>
+        </Typography> */}
       </Box>
     </Card>
   );

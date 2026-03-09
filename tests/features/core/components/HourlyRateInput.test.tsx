@@ -43,17 +43,17 @@ describe("HourlyRateInput", () => {
       expect(screen.getByRole("button", { name: "Change Rate" })).toBeInTheDocument();
     });
 
-    it("shows 'View provider rates' link", () => {
-      render(<HourlyRateInput {...defaultProps} />);
-      expect(screen.getByText(/View provider rates/)).toBeInTheDocument();
-    });
+    // it("shows 'View provider rates' link", () => {
+    //   render(<HourlyRateInput {...defaultProps} />);
+    //   expect(screen.getByText(/View provider rates/)).toBeInTheDocument();
+    // });
 
-    it("shows helper text about not knowing what to enter", () => {
-      render(<HourlyRateInput {...defaultProps} />);
-      expect(
-        screen.getByText(/Not sure what to enter/i)
-      ).toBeInTheDocument();
-    });
+    // it("shows helper text about not knowing what to enter", () => {
+    //   render(<HourlyRateInput {...defaultProps} />);
+    //   expect(
+    //     screen.getByText(/Not sure what to enter/i)
+    //   ).toBeInTheDocument();
+    // });
   });
 
   describe("entering edit mode", () => {
