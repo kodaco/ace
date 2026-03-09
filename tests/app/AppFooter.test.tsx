@@ -60,7 +60,7 @@ describe("AppFooter", () => {
     expect(screen.getByText("References")).toBeInTheDocument();
   });
 
-  it("renders the 'Built with Next.js & MUI' attribution", () => {
-    expect(screen.getByText(/Built with Next\.js & MUI/i)).toBeInTheDocument();
+  it("renders the 'Built by koda co., Sun & Prairie Studios' attribution", () => {
+    expect(screen.getByText('Built by koda co., Sun & Prairie Studios')).toBeInTheDocument();
   });
 });
