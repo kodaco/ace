@@ -5,6 +5,7 @@ const nextConfig: NextConfig = {
   reactCompiler: true,
   output: 'export',
   reactStrictMode: true,
+  basePath: '/ace'
 };
 
 export default nextConfig;
