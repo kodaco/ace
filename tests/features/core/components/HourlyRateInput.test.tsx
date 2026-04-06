@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { HourlyRateInput } from "@/features/core/components/HourlyRateInput";
+import { DEFAULT_CURRENCY } from "@/features/core/data/currencies";
 
 const mockPush = jest.fn();
 jest.mock("next/navigation", () => ({
@@ -16,6 +17,8 @@ describe("HourlyRateInput", () => {
   const defaultProps = {
     value: 100,
     onChange: jest.fn(),
+    currency: DEFAULT_CURRENCY,
+    onCurrencyChange: jest.fn(),
   };
 
   beforeEach(() => {
@@ -102,7 +105,7 @@ describe("HourlyRateInput", () => {
     it("clicking 'Cancel' does not call onChange", async () => {
       const onChange = jest.fn();
       const user = userEvent.setup();
-      render(<HourlyRateInput value={100} onChange={onChange} />);
+      render(<HourlyRateInput {...defaultProps} onChange={onChange} />);
 
       await user.click(screen.getByRole("button", { name: "Change Rate" }));
       await user.click(screen.getByRole("button", { name: "Cancel" }));
@@ -113,7 +116,7 @@ describe("HourlyRateInput", () => {
     it("pressing Escape in edit mode cancels and returns to read-only", async () => {
       const onChange = jest.fn();
       const user = userEvent.setup();
-      render(<HourlyRateInput value={100} onChange={onChange} />);
+      render(<HourlyRateInput {...defaultProps} onChange={onChange} />);
 
       await user.click(screen.getByRole("button", { name: "Change Rate" }));
       await user.keyboard("{Escape}");
@@ -127,7 +130,7 @@ describe("HourlyRateInput", () => {
     it("typing a value and clicking 'Set Rate' calls onChange with parsed number", async () => {
       const onChange = jest.fn();
       const user = userEvent.setup();
-      render(<HourlyRateInput value={100} onChange={onChange} />);
+      render(<HourlyRateInput {...defaultProps} onChange={onChange} />);
 
       await user.click(screen.getByRole("button", { name: "Change Rate" }));
 
@@ -142,7 +145,7 @@ describe("HourlyRateInput", () => {
     it("pressing Enter in edit mode accepts and calls onChange", async () => {
       const onChange = jest.fn();
       const user = userEvent.setup();
-      render(<HourlyRateInput value={100} onChange={onChange} />);
+      render(<HourlyRateInput {...defaultProps} onChange={onChange} />);
 
       await user.click(screen.getByRole("button", { name: "Change Rate" }));
 
@@ -157,7 +160,7 @@ describe("HourlyRateInput", () => {
     it("pressing Enter returns to read-only mode after accepting", async () => {
       const onChange = jest.fn();
       const user = userEvent.setup();
-      render(<HourlyRateInput value={100} onChange={onChange} />);
+      render(<HourlyRateInput {...defaultProps} onChange={onChange} />);
 
       await user.click(screen.getByRole("button", { name: "Change Rate" }));
 
@@ -174,7 +177,7 @@ describe("HourlyRateInput", () => {
     it("empty input does not call onChange when 'Set Rate' is clicked", async () => {
       const onChange = jest.fn();
       const user = userEvent.setup();
-      render(<HourlyRateInput value={100} onChange={onChange} />);
+      render(<HourlyRateInput {...defaultProps} onChange={onChange} />);
 
       await user.click(screen.getByRole("button", { name: "Change Rate" }));
 
@@ -188,7 +191,7 @@ describe("HourlyRateInput", () => {
     it("non-numeric input does not call onChange when 'Set Rate' is clicked", async () => {
       const onChange = jest.fn();
       const user = userEvent.setup();
-      render(<HourlyRateInput value={100} onChange={onChange} />);
+      render(<HourlyRateInput {...defaultProps} onChange={onChange} />);
 
       await user.click(screen.getByRole("button", { name: "Change Rate" }));
 

@@ -41,3 +41,32 @@ a {
     color-scheme: dark;
   }
 }
+
+@media print {
+  /* Hide everything on the page … */
+  body > * {
+    visibility: hidden;
+  }
+
+  /* … except the estimate output section */
+  #estimate-output,
+  #estimate-output * {
+    visibility: visible;
+  }
+
+  /* Position it at the top-left so it fills the page */
+  #estimate-output {
+    position: absolute;
+    inset: 0;
+    padding: 0;
+  }
+
+  .MuiCard-root {
+    box-shadow: none !important;
+    border: 1px solid #e0e0e0 !important;
+  }
+
+  @page {
+    margin: 1.5cm;
+  }
+}

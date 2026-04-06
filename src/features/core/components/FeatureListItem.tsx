@@ -8,6 +8,7 @@ import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import { keyframes } from "@mui/material/styles";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import CloseIcon from "@mui/icons-material/Close";
 import { AppFeature } from "@/features/core/models";
 import {
   AI_DEV_MULTIPLIER,
@@ -25,6 +26,7 @@ interface FeatureListItemProps {
   buildWithAi: boolean;
   onToggle: () => void;
   onToggleExpand: () => void;
+  onRemove?: () => void;
 }
 
 const popIn = keyframes`
@@ -41,6 +43,7 @@ export function FeatureListItem({
   buildWithAi,
   onToggle,
   onToggleExpand,
+  onRemove,
 }: FeatureListItemProps) {
   const isMaintenance = feature.id === "maintenance";
 
@@ -67,6 +70,7 @@ export function FeatureListItem({
   return (
     <Card
       variant="outlined"
+      data-testid={`feature-item-${feature.id}`}
       sx={{
         borderColor: selected || locked ? "primary.main" : undefined,
       }}
@@ -109,21 +113,32 @@ export function FeatureListItem({
             {pillLabel}
           </Typography>
         </Box>
-        <IconButton
-          size="small"
-          onClick={(e) => {
-            e.stopPropagation();
-            onToggleExpand();
-          }}
-          sx={{
-            ml: 1,
-            transform: expanded ? "rotate(180deg)" : "rotate(0deg)",
-            transition: "transform 0.2s",
-          }}
-          aria-label="View details"
-        >
-          <ExpandMoreIcon />
-        </IconButton>
+        {onRemove ? (
+          <IconButton
+            size="small"
+            onClick={(e) => { e.stopPropagation(); onRemove(); }}
+            sx={{ ml: 1, color: "text.secondary" }}
+            aria-label="Remove custom feature"
+          >
+            <CloseIcon fontSize="small" />
+          </IconButton>
+        ) : (
+          <IconButton
+            size="small"
+            onClick={(e) => {
+              e.stopPropagation();
+              onToggleExpand();
+            }}
+            sx={{
+              ml: 1,
+              transform: expanded ? "rotate(180deg)" : "rotate(0deg)",
+              transition: "transform 0.2s",
+            }}
+            aria-label="View details"
+          >
+            <ExpandMoreIcon />
+          </IconButton>
+        )}
       </Box>
       <Collapse in={expanded}>
         <Divider />

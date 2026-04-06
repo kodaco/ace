@@ -13,9 +13,10 @@ export function calculateEstimate(
   selectedFeatures: AppFeature[],
   hourlyRate: number,
   buildWithAi: boolean,
+  platformMultiplier = 1.0,
 ): EstimateResult {
   const devFeatures = selectedFeatures.filter((f) => f.id !== "maintenance");
-  const devMultiplier = buildWithAi ? AI_DEV_MULTIPLIER : 1;
+  const devMultiplier = (buildWithAi ? AI_DEV_MULTIPLIER : 1) * platformMultiplier;
 
   let devMinHours = 0;
   let devMaxHours = 0;

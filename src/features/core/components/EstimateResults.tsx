@@ -9,13 +9,21 @@ import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 import Collapse from "@mui/material/Collapse";
 import IconButton from "@mui/material/IconButton";
+import Button from "@mui/material/Button";
 import Skeleton from "@mui/material/Skeleton";
+import Snackbar from "@mui/material/Snackbar";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import ToggleButton from "@mui/material/ToggleButton";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import RocketLaunchOutlinedIcon from "@mui/icons-material/RocketLaunchOutlined";
 import BuildOutlinedIcon from "@mui/icons-material/BuildOutlined";
+import LinkIcon from "@mui/icons-material/Link";
+import PictureAsPdfOutlinedIcon from "@mui/icons-material/PictureAsPdfOutlined";
+import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
+import CheckIcon from "@mui/icons-material/Check";
+import TextField from "@mui/material/TextField";
 import { AppFeature, EstimateResult } from "@/features/core/models";
+import { Currency, DEFAULT_CURRENCY } from "@/features/core/data/currencies";
 
 type EstimateMode = "low" | "mid" | "high";
 
@@ -23,14 +31,14 @@ interface EstimateResultsProps {
   estimate: EstimateResult | null;
   selectedFeatures?: AppFeature[];
   loading?: boolean;
+  currency?: Currency;
+  onSave?: (name: string) => void;
 }
 
-const currencyFormatter = new Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: "USD",
-  minimumFractionDigits: 0,
-  maximumFractionDigits: 0,
-});
+function formatCost(usdAmount: number, currency: Currency): string {
+  const converted = Math.round(usdAmount * currency.rateFromUsd);
+  return `${currency.symbol}${converted.toLocaleString()}`;
+}
 
 function formatWeeks(weeks: number): string {
   if (weeks >= 8) {
@@ -39,10 +47,33 @@ function formatWeeks(weeks: number): string {
   return `${Math.ceil(weeks)} weeks`;
 }
 
-export function EstimateResults({ estimate, selectedFeatures = [], loading }: EstimateResultsProps) {
+export function EstimateResults({ estimate, selectedFeatures = [], loading, currency = DEFAULT_CURRENCY, onSave }: EstimateResultsProps) {
   const [expanded, setExpanded] = useState(false);
   const [mode, setMode] = useState<EstimateMode>("mid");
   const [valuesLoading, setValuesLoading] = useState(false);
+  const [linkCopied, setLinkCopied] = useState(false);
+  const [savingName, setSavingName] = useState("");
+  const [showSaveInput, setShowSaveInput] = useState(false);
+  const [justSaved, setJustSaved] = useState(false);
+
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(window.location.href).then(() => {
+      setLinkCopied(true);
+    });
+  };
+
+  const handlePrint = () => {
+    window.print();
+  };
+
+  const handleConfirmSave = () => {
+    if (!savingName.trim() || !onSave) return;
+    onSave(savingName.trim());
+    setSavingName("");
+    setShowSaveInput(false);
+    setJustSaved(true);
+    setTimeout(() => setJustSaved(false), 2500);
+  };
 
   const handleModeChange = (_: React.SyntheticEvent, next: EstimateMode | null) => {
     if (!next || next === mode) return;
@@ -76,7 +107,7 @@ export function EstimateResults({ estimate, selectedFeatures = [], loading }: Es
     : 0;
 
   return (
-    <Card variant="outlined" sx={{ bgcolor: "grey.50" }}>
+    <Card variant="outlined" data-testid="estimate-results" sx={{ bgcolor: "grey.50" }}>
       <CardContent>
         <Typography variant="h5" gutterBottom>
           Estimate Summary
@@ -87,7 +118,7 @@ export function EstimateResults({ estimate, selectedFeatures = [], loading }: Es
             {estimate.featureCount} feature
             {estimate.featureCount !== 1 ? "s" : ""} selected
             {" \u00B7 "}
-            {currencyFormatter.format(estimate.hourlyRate)}/hr rate
+            {formatCost(estimate.hourlyRate, currency)}/hr rate
           </Typography>
         ) : (
           <Skeleton variant="text" width="52%" sx={{ fontSize: "0.875rem", mb: 0.5 }} />
@@ -134,7 +165,7 @@ export function EstimateResults({ estimate, selectedFeatures = [], loading }: Es
               <Skeleton variant="text" width="55%" sx={{ fontSize: "2.125rem" }} />
             ) : (
               <Typography variant="h4">
-                {currencyFormatter.format(displayCost)}
+                {formatCost(displayCost, currency)}
               </Typography>
             )}
           </div>
@@ -231,7 +262,7 @@ export function EstimateResults({ estimate, selectedFeatures = [], loading }: Es
                 Estimated Annual Maintenance
               </Typography>
               <Typography variant="h6">
-                {currencyFormatter.format(avgMaintCost)}
+                {formatCost(avgMaintCost, currency)}
                 <Box component="span" sx={{ fontWeight: 400, color: "text.secondary", fontSize: "0.7em", ml: 0.75 }}>
                   /yr
                 </Box>
@@ -251,6 +282,7 @@ export function EstimateResults({ estimate, selectedFeatures = [], loading }: Es
           <>
             <Divider sx={{ mt: 2.5, mb: 0 }} />
             <Box
+              data-testid="details-toggle"
               sx={{
                 display: "flex",
                 alignItems: "center",
@@ -287,8 +319,8 @@ export function EstimateResults({ estimate, selectedFeatures = [], loading }: Es
                   <Typography variant="body2" sx={{ fontWeight: 500 }}>
                     Development cost:{" "}
                     <Box component="span" sx={{ fontWeight: 400 }}>
-                      {currencyFormatter.format(estimate.minCost)} &ndash;{" "}
-                      {currencyFormatter.format(estimate.maxCost)}
+                      {formatCost(estimate.minCost, currency)} &ndash;{" "}
+                      {formatCost(estimate.maxCost, currency)}
                     </Box>
                   </Typography>
                   <Typography variant="body2" sx={{ fontWeight: 500 }}>
@@ -306,12 +338,62 @@ export function EstimateResults({ estimate, selectedFeatures = [], loading }: Es
                   <Typography variant="body2" sx={{ fontWeight: 500 }}>
                     Annual maintenance:{" "}
                     <Box component="span" sx={{ fontWeight: 400 }}>
-                      {currencyFormatter.format(estimate.maintMinCost)} &ndash;{" "}
-                      {currencyFormatter.format(estimate.maintMaxCost)}/yr
+                      {formatCost(estimate.maintMinCost, currency)} &ndash;{" "}
+                      {formatCost(estimate.maintMaxCost, currency)}/yr
                       {" "}({estimate.maintMinHours} &ndash; {estimate.maintMaxHours} hrs)
                     </Box>
                   </Typography>
                 </Stack>
+
+                {/* Cost breakdown by feature */}
+                {selectedFeatures.filter((f) => f.id !== "maintenance" && !f.alwaysActive).length > 0 && (
+                  <Box sx={{ mt: 2 }}>
+                    <Typography variant="body2" sx={{ fontWeight: 500, mb: 1 }}>
+                      Hours by feature
+                    </Typography>
+                    <Stack spacing={0.75}>
+                      {(() => {
+                          const devFeatures = selectedFeatures.filter(
+                            (f) => f.id !== "maintenance" && !f.alwaysActive,
+                          );
+                          const totalAvg = devFeatures.reduce(
+                            (sum, f) => sum + (f.minHours + f.maxHours) / 2,
+                            0,
+                          );
+                          return [...devFeatures]
+                            .sort((a, b) => (b.minHours + b.maxHours) - (a.minHours + a.maxHours))
+                            .map((f) => {
+                              const avgHours = (f.minHours + f.maxHours) / 2;
+                              const pct = totalAvg > 0 ? Math.round((avgHours / totalAvg) * 100) : 0;
+                              return (
+                                <Box key={f.id}>
+                                  <Box sx={{ display: "flex", justifyContent: "space-between", mb: 0.35 }}>
+                                    <Typography variant="caption" color="text.secondary" sx={{ lineHeight: 1.4 }}>
+                                      {f.name}
+                                    </Typography>
+                                    <Typography variant="caption" color="text.secondary" sx={{ ml: 1, whiteSpace: "nowrap" }}>
+                                      ~{Math.round(avgHours)} hrs · {pct}%
+                                    </Typography>
+                                  </Box>
+                                  <Box sx={{ height: 6, borderRadius: 3, bgcolor: "grey.100", overflow: "hidden" }}>
+                                    <Box
+                                      sx={{
+                                        height: "100%",
+                                        width: `${pct}%`,
+                                        bgcolor: "primary.main",
+                                        borderRadius: 3,
+                                        opacity: 0.75,
+                                        transition: "width 0.4s ease",
+                                      }}
+                                    />
+                                  </Box>
+                                </Box>
+                              );
+                            });
+                        })()}
+                    </Stack>
+                  </Box>
+                )}
               </Box>
             </Collapse>
           </>
@@ -344,7 +426,75 @@ export function EstimateResults({ estimate, selectedFeatures = [], loading }: Es
             </Box>
           </>
         )}
+        {/* Action buttons */}
+        {!showValueSkeleton && estimate && (
+          <>
+            <Divider sx={{ mt: 2.5, mb: 2 }} />
+            <Box sx={{ display: "flex", gap: 1.5, flexWrap: "wrap" }}>
+              <Button
+                size="small"
+                variant="outlined"
+                startIcon={<LinkIcon fontSize="small" />}
+                onClick={handleCopyLink}
+                sx={{ textTransform: "none", borderRadius: 2 }}
+              >
+                Copy shareable link
+              </Button>
+              <Button
+                size="small"
+                variant="outlined"
+                startIcon={<PictureAsPdfOutlinedIcon fontSize="small" />}
+                onClick={handlePrint}
+                sx={{ textTransform: "none", borderRadius: 2 }}
+                className="no-print"
+              >
+                Save as PDF
+              </Button>
+              {onSave && (
+                <Button
+                  size="small"
+                  variant="outlined"
+                  startIcon={justSaved ? <CheckIcon fontSize="small" /> : <BookmarkBorderIcon fontSize="small" />}
+                  onClick={() => setShowSaveInput((p) => !p)}
+                  sx={{ textTransform: "none", borderRadius: 2, color: justSaved ? "success.main" : undefined, borderColor: justSaved ? "success.main" : undefined }}
+                  className="no-print"
+                >
+                  {justSaved ? "Saved!" : "Save estimate"}
+                </Button>
+              )}
+            </Box>
+            {onSave && (
+              <Collapse in={showSaveInput}>
+                <Box sx={{ display: "flex", gap: 1, mt: 1.5, alignItems: "center" }}>
+                  <TextField
+                    size="small"
+                    placeholder="Name this estimate…"
+                    value={savingName}
+                    onChange={(e) => setSavingName(e.target.value)}
+                    onKeyDown={(e) => { if (e.key === "Enter") handleConfirmSave(); if (e.key === "Escape") setShowSaveInput(false); }}
+                    autoFocus
+                    sx={{ flex: 1, maxWidth: 260 }}
+                  />
+                  <Button size="small" variant="contained" onClick={handleConfirmSave} disabled={!savingName.trim()} sx={{ textTransform: "none" }}>
+                    Save
+                  </Button>
+                  <Button size="small" onClick={() => setShowSaveInput(false)} sx={{ textTransform: "none" }}>
+                    Cancel
+                  </Button>
+                </Box>
+              </Collapse>
+            )}
+          </>
+        )}
       </CardContent>
+
+      <Snackbar
+        open={linkCopied}
+        autoHideDuration={2500}
+        onClose={() => setLinkCopied(false)}
+        message="Link copied to clipboard"
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      />
     </Card>
   );
 }

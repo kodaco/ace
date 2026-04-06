@@ -3,6 +3,7 @@ import { AppFeature } from "@/features/core/models";
 export const PREDEFINED_FEATURES: AppFeature[] = [
   {
     id: "user-auth",
+    category: "core",
     name: "User Accounts & Login",
     description: "Let users create accounts, sign in, and manage their passwords",
     details:
@@ -14,6 +15,7 @@ export const PREDEFINED_FEATURES: AppFeature[] = [
   },
   {
     id: "user-profiles",
+    category: "core",
     name: "User Profiles",
     description: "Personal profile pages where users can manage their info",
     details:
@@ -25,6 +27,7 @@ export const PREDEFINED_FEATURES: AppFeature[] = [
   },
   {
     id: "push-notifications",
+    category: "communication",
     name: "Push Notifications",
     description: "Send alerts and updates directly to users' devices",
     details:
@@ -36,6 +39,7 @@ export const PREDEFINED_FEATURES: AppFeature[] = [
   },
   {
     id: "payments",
+    category: "commerce",
     name: "Payments & Checkout",
     description: "Accept payments from your users securely",
     details:
@@ -47,6 +51,7 @@ export const PREDEFINED_FEATURES: AppFeature[] = [
   },
   {
     id: "search",
+    category: "data",
     name: "Search",
     description: "Help users quickly find what they're looking for",
     details:
@@ -58,6 +63,7 @@ export const PREDEFINED_FEATURES: AppFeature[] = [
   },
   {
     id: "messaging",
+    category: "communication",
     name: "In-App Messaging",
     description: "Let users send messages to each other in real time",
     details:
@@ -69,6 +75,7 @@ export const PREDEFINED_FEATURES: AppFeature[] = [
   },
   {
     id: "admin-dashboard",
+    category: "data",
     name: "Admin Dashboard",
     description: "A control panel for you to manage your app and its users",
     details:
@@ -80,6 +87,7 @@ export const PREDEFINED_FEATURES: AppFeature[] = [
   },
   {
     id: "file-uploads",
+    category: "platform",
     name: "File Uploads",
     description: "Let users upload photos, documents, or other files",
     details:
@@ -91,6 +99,7 @@ export const PREDEFINED_FEATURES: AppFeature[] = [
   },
   {
     id: "analytics",
+    category: "data",
     name: "Analytics & Reporting",
     description: "Track how people use your app and view reports",
     details:
@@ -102,6 +111,7 @@ export const PREDEFINED_FEATURES: AppFeature[] = [
   },
   {
     id: "geolocation",
+    category: "platform",
     name: "Geolocation Services",
     description: "Use a device's location to power maps, nearby search, and more",
     details:
@@ -113,6 +123,7 @@ export const PREDEFINED_FEATURES: AppFeature[] = [
   },
   {
     id: "social-sharing",
+    category: "communication",
     name: "Social Sharing",
     description: "Let users share content from your app to social media",
     details:
@@ -124,6 +135,7 @@ export const PREDEFINED_FEATURES: AppFeature[] = [
   },
   {
     id: "booking-scheduling",
+    category: "commerce",
     name: "Booking & Scheduling",
     description: "Let users book appointments, reserve slots, or schedule services",
     details:
@@ -135,6 +147,7 @@ export const PREDEFINED_FEATURES: AppFeature[] = [
   },
   {
     id: "onboarding",
+    category: "core",
     name: "Onboarding Flow",
     description: "Guide new users through setup and key features on first launch",
     details:
@@ -146,6 +159,7 @@ export const PREDEFINED_FEATURES: AppFeature[] = [
   },
   {
     id: "reviews-ratings",
+    category: "communication",
     name: "Reviews & Ratings",
     description: "Let users leave star ratings and written reviews",
     details:
@@ -157,6 +171,7 @@ export const PREDEFINED_FEATURES: AppFeature[] = [
   },
   {
     id: "ecommerce",
+    category: "commerce",
     name: "Product Catalog & Shopping Cart",
     description: "Browse products, manage a cart, and complete purchases",
     details:
@@ -168,6 +183,7 @@ export const PREDEFINED_FEATURES: AppFeature[] = [
   },
   {
     id: "subscriptions",
+    category: "commerce",
     name: "Subscriptions & Memberships",
     description: "Charge users on a recurring basis or gate content by membership tier",
     details:
@@ -179,6 +195,7 @@ export const PREDEFINED_FEATURES: AppFeature[] = [
   },
   {
     id: "integrations",
+    category: "data",
     name: "Third-party Integrations",
     description: "Connect your app to external tools and services",
     details:
@@ -190,6 +207,7 @@ export const PREDEFINED_FEATURES: AppFeature[] = [
   },
   {
     id: "multi-language",
+    category: "data",
     name: "Multi-language Support",
     description: "Make your app available in more than one language",
     details:
@@ -201,6 +219,7 @@ export const PREDEFINED_FEATURES: AppFeature[] = [
   },
   {
     id: "qr-barcode",
+    category: "platform",
     name: "QR & Barcode Scanning",
     description: "Scan QR codes or barcodes using the device camera",
     details:
@@ -213,6 +232,7 @@ export const PREDEFINED_FEATURES: AppFeature[] = [
 
   {
     id: "offline-mode",
+    category: "platform",
     name: "Offline Mode",
     description: "Keep your app usable when there is no internet connection",
     details:
@@ -223,7 +243,116 @@ export const PREDEFINED_FEATURES: AppFeature[] = [
     maxHours: 160,
   },
   {
+    id: "biometric-auth",
+    category: "advanced",
+    name: "Biometric / Face ID Auth",
+    description: "Let users sign in with Face ID, Touch ID, or fingerprint",
+    details:
+      "Adds biometric authentication as a sign-in or confirmation method, letting users use their fingerprint or face to log in instead of typing a password. This works alongside your existing login system and is commonly used to confirm sensitive actions like payments or account changes.",
+    factors:
+      "Supporting a single platform (iOS or Android) is straightforward. Supporting both platforms, integrating with an existing password-based system, and fallback handling when biometrics aren't available adds time. Some devices may not support biometrics at all, so graceful degradation is important.",
+    minHours: 20,
+    maxHours: 60,
+  },
+  {
+    id: "video-audio-streaming",
+    category: "advanced",
+    name: "Video & Audio Streaming",
+    description: "Stream or upload video and audio content within your app",
+    details:
+      "Allows your app to play video or audio content, either streamed from a server or uploaded by users. This includes a media player with playback controls, buffering indicators, and support for different network conditions. May also include user-generated content uploads, a content library, and basic moderation.",
+    factors:
+      "Embedding a third-party player for pre-recorded content is the simplest approach. Live streaming, user uploads with transcoding, adaptive bitrate streaming, content access controls (pay-per-view, subscription), and offline downloads all add significant complexity.",
+    minHours: 80,
+    maxHours: 200,
+  },
+  {
+    id: "dark-mode",
+    category: "advanced",
+    name: "Dark Mode / Theming",
+    description: "Support a dark color scheme or user-selectable themes",
+    details:
+      "Adds a dark mode option that users can toggle manually or that follows their device's system setting. This involves building a second set of color tokens for every screen and component in the app, then connecting them to a user preference that persists across sessions.",
+    factors:
+      "The main driver is the size and complexity of your app. More screens and custom UI components mean more theming work. Starting with a theming system from the beginning is much easier than retrofitting it onto an existing app. Custom illustrations or photos may also need dark variants.",
+    minHours: 20,
+    maxHours: 50,
+  },
+  {
+    id: "accessibility",
+    category: "advanced",
+    name: "Accessibility (WCAG Compliance)",
+    description: "Make your app usable for people with disabilities",
+    details:
+      "Ensures your app meets accessibility standards (WCAG 2.1 AA) so it works well with screen readers, keyboard navigation, and other assistive technologies. This includes proper semantic markup, sufficient color contrast, focus management, and accessible labels for interactive elements.",
+    factors:
+      "Accessibility is easiest when built in from the start. Retrofitting an existing app takes more effort. Complex custom UI components (custom dropdowns, sliders, modals) require the most attention. Getting to full WCAG AAA compliance or supporting advanced assistive technology features takes considerably longer.",
+    minHours: 30,
+    maxHours: 80,
+  },
+  {
+    id: "ar-camera",
+    category: "advanced",
+    name: "AR / Camera Features",
+    description: "Use the device camera for augmented reality or image capture",
+    details:
+      "Integrates the device camera for features beyond basic photo uploads — such as augmented reality overlays, real-time image analysis, try-on experiences, or object recognition. This requires working with platform AR frameworks and often involves significant performance optimization to keep the camera view running smoothly.",
+    factors:
+      "Simple camera capture with an overlay is on the lower end. AR tracking (placing virtual objects in the real world), face filters, real-time object detection, or multi-platform AR support push toward the higher end. AR features are among the most hardware- and performance-sensitive in mobile development.",
+    minHours: 60,
+    maxHours: 200,
+  },
+  {
+    id: "email-marketing",
+    category: "advanced",
+    name: "Email Marketing Integration",
+    description: "Connect your app to an email marketing platform",
+    details:
+      "Integrates your app with an email marketing service (like Mailchimp, Klaviyo, or Brevo) so that user sign-ups, purchases, or actions automatically trigger email campaigns or add users to lists. Includes syncing user data, managing subscription preferences, and tracking email engagement back in your app or dashboard.",
+    factors:
+      "A simple sync of new users to an email list is quick to set up. Triggered automations based on in-app behavior, custom audience segmentation, two-way data sync, and managing unsubscribes in both systems add complexity. The quality of the marketing platform's API is also a factor.",
+    minHours: 20,
+    maxHours: 60,
+  },
+  {
+    id: "multi-tenant",
+    category: "advanced",
+    name: "Multi-tenant / White-label Support",
+    description: "Run separate branded instances of your app for different clients",
+    details:
+      "Allows your app to be deployed as separate branded instances for different clients or organizations, each with their own users, data, and branding. This is common in B2B SaaS products where each customer wants their own branded environment. Includes tenant isolation, per-tenant configuration, custom domain support, and admin tooling to manage multiple tenants.",
+    factors:
+      "The biggest factors are data isolation requirements and how much customization each tenant needs. Shared infrastructure with logical separation is simpler than fully isolated deployments. Custom domains, per-tenant themes, and tenant-specific feature flags all add to the scope.",
+    minHours: 80,
+    maxHours: 250,
+  },
+  {
+    id: "webhooks-api",
+    category: "advanced",
+    name: "Webhooks & API Access",
+    description: "Let external services connect to your app via API or webhooks",
+    details:
+      "Exposes your app's data and functionality to external systems through a public API or webhook system. This lets other services push data into your app (webhooks) or pull data out (API). Common uses include triggering automations in Zapier, syncing with a CRM, or letting enterprise customers build their own integrations.",
+    factors:
+      "A simple read-only REST API over a small dataset is fairly quick. Adding authentication (API keys, OAuth), rate limiting, versioning, a developer portal, and write access significantly increases the scope. Webhooks require reliable event queuing and retry logic to handle failures gracefully.",
+    minHours: 40,
+    maxHours: 120,
+  },
+  {
+    id: "data-import-export",
+    category: "advanced",
+    name: "Data Import / Export",
+    description: "Let users bring their data in or take it out as files",
+    details:
+      "Allows users to upload data in bulk (CSV, Excel, or JSON) to populate the app, or to download their data in a structured format. Import flows include file validation, error reporting, and progress feedback for large uploads. Export flows generate downloadable reports or full data dumps on demand.",
+    factors:
+      "Simple CSV export of a single data type is quick. Complex imports with data mapping, duplicate detection, partial success handling, and large file support take considerably longer. Scheduled or automated exports, multiple file formats, and compliance-driven data portability requirements add to the scope.",
+    minHours: 30,
+    maxHours: 80,
+  },
+  {
     id: "ui-ux-design",
+    category: "core",
     name: "UI/UX Design",
     description: "How your app looks and feels across all screen sizes",
     details:
@@ -236,6 +365,7 @@ export const PREDEFINED_FEATURES: AppFeature[] = [
   },
   {
     id: "maintenance",
+    category: "core",
     name: "Ongoing Maintenance",
     description: "Keeping your app running smoothly after launch",
     details:
