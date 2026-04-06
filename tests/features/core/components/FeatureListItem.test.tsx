@@ -172,6 +172,34 @@ describe("FeatureListItem", () => {
     });
   });
 
+  describe("onRemove — custom feature delete (line 119)", () => {
+    it("renders a remove button when onRemove is provided", () => {
+      const customFeat: AppFeature = { ...mockFeature, id: "custom-456", name: "Custom Feature" };
+      render(<FeatureListItem {...baseProps} feature={customFeat} onRemove={jest.fn()} />);
+      expect(screen.getByRole("button", { name: "Remove custom feature" })).toBeInTheDocument();
+    });
+
+    it("clicking the remove button calls onRemove", async () => {
+      const onRemove = jest.fn();
+      const user = userEvent.setup();
+      const customFeat: AppFeature = { ...mockFeature, id: "custom-456", name: "Custom Feature" };
+      render(<FeatureListItem {...baseProps} feature={customFeat} onRemove={onRemove} />);
+      await user.click(screen.getByRole("button", { name: "Remove custom feature" }));
+      expect(onRemove).toHaveBeenCalledTimes(1);
+    });
+
+    it("clicking the remove button does NOT propagate to onToggle", async () => {
+      const onToggle = jest.fn();
+      const user = userEvent.setup();
+      const customFeat: AppFeature = { ...mockFeature, id: "custom-456", name: "Custom Feature" };
+      render(
+        <FeatureListItem {...baseProps} feature={customFeat} onToggle={onToggle} onRemove={jest.fn()} />
+      );
+      await user.click(screen.getByRole("button", { name: "Remove custom feature" }));
+      expect(onToggle).not.toHaveBeenCalled();
+    });
+  });
+
   describe("hour pill in collapsed view", () => {
     it("shows the average hours pill in collapsed view (buildWithAi=false)", () => {
       // averageHours = round((40+100)/2) = 70

@@ -56,6 +56,8 @@ export function EstimateResults({ estimate, selectedFeatures = [], loading, curr
   const [showSaveInput, setShowSaveInput] = useState(false);
   const [justSaved, setJustSaved] = useState(false);
 
+  const handleSnackbarClose = () => setLinkCopied(false);
+
   const handleCopyLink = () => {
     navigator.clipboard.writeText(window.location.href).then(() => {
       setLinkCopied(true);
@@ -464,7 +466,7 @@ export function EstimateResults({ estimate, selectedFeatures = [], loading, curr
               )}
             </Box>
             {onSave && (
-              <Collapse in={showSaveInput}>
+              <Collapse in={showSaveInput} unmountOnExit>
                 <Box sx={{ display: "flex", gap: 1, mt: 1.5, alignItems: "center" }}>
                   <TextField
                     size="small"
@@ -491,7 +493,7 @@ export function EstimateResults({ estimate, selectedFeatures = [], loading, curr
       <Snackbar
         open={linkCopied}
         autoHideDuration={2500}
-        onClose={() => setLinkCopied(false)}
+        onClose={handleSnackbarClose}
         message="Link copied to clipboard"
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
       />

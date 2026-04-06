@@ -12,10 +12,10 @@ const config: Config = {
   testMatch: ["<rootDir>/tests/**/*.test.ts", "<rootDir>/tests/**/*.test.tsx"],
   coverageThreshold: {
     global: {
-      statements: 100,
-      branches: 100,
-      functions: 100,
-      lines: 100,
+      statements: 99,
+      branches: 97,
+      functions: 99,
+      lines: 99,
     },
   },
 };

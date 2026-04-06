@@ -20,6 +20,7 @@ export interface SavedEstimate {
 }
 
 function readAll(): SavedEstimate[] {
+   
   if (typeof window === "undefined") return [];
   try {
     const raw = localStorage.getItem(STORAGE_KEY);

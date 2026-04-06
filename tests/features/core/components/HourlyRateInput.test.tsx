@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { HourlyRateInput } from "@/features/core/components/HourlyRateInput";
 import { DEFAULT_CURRENCY } from "@/features/core/data/currencies";
@@ -171,6 +171,25 @@ describe("HourlyRateInput", () => {
 
       expect(screen.getByRole("button", { name: "Change Rate" })).toBeInTheDocument();
     });
+  });
+
+  describe("currency selector (lines 51-52)", () => {
+    it("changing the currency Select calls onCurrencyChange with the matching currency", async () => {
+      const onCurrencyChange = jest.fn();
+      const user = userEvent.setup();
+      render(<HourlyRateInput {...defaultProps} onCurrencyChange={onCurrencyChange} />);
+
+      // Open the MUI Select (it renders as a combobox)
+      await user.click(screen.getByRole("combobox"));
+      // Click the EUR option from the open listbox
+      const eurOption = screen.getByRole("option", { name: /EUR/i });
+      await user.click(eurOption);
+
+      expect(onCurrencyChange).toHaveBeenCalledWith(
+        expect.objectContaining({ code: "EUR" })
+      );
+    });
+
   });
 
   describe("invalid input", () => {

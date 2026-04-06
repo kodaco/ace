@@ -66,7 +66,7 @@ export function SavedEstimatesDrawer({
               No saved estimates yet.
             </Typography>
             <Typography variant="caption" color="text.disabled" display="block" sx={{ mt: 0.5 }}>
-              Run an estimate and click "Save Estimate" to store it here.
+              {'Run an estimate and click "Save Estimate" to store it here.'}
             </Typography>
           </Box>
         ) : (

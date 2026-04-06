@@ -330,8 +330,8 @@ function mailtoStrategy(
 //   5. Change ACTIVE_STRATEGY above to "api"
 // ─────────────────────────────────────────────────────────────────────────────
 
-/* istanbul ignore next */
-async function apiStrategy(
+/** @internal — exported only for testing; not part of public API */
+export async function apiStrategy(
   _estimate: EstimateResult,
   _selectedFeatures: AppFeature[],
   _toEmail: string,
@@ -341,7 +341,7 @@ async function apiStrategy(
   // import { sendEstimateEmail } from "@/features/core/actions/send-estimate-email";
   // await sendEstimateEmail({ estimate: _estimate, features: _selectedFeatures, to: _toEmail });
 
-  /* istanbul ignore next */
+   
   throw new Error(
     "API email strategy is not yet configured. " +
       "See estimate-email.ts for setup instructions.",
@@ -357,11 +357,10 @@ export function shareEstimateByEmail(
   selectedFeatures: AppFeature[],
   toEmail: string,
 ): void {
-  /* istanbul ignore else */
   if (ACTIVE_STRATEGY === "mailto") {
     mailtoStrategy(estimate, selectedFeatures, toEmail);
   } else {
-    /* istanbul ignore next */
+     
     void apiStrategy(estimate, selectedFeatures, toEmail);
   }
 }

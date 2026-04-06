@@ -73,7 +73,7 @@ export function FeatureList({
 
       <Stack spacing={1.5}>
         {CATEGORY_ORDER.map((cat) => {
-          const catFeatures = byCategory.get(cat) ?? [];
+          const catFeatures = byCategory.get(cat)!;
           if (catFeatures.length === 0 && !(cat === "advanced" && advancedExtra)) return null;
           return (
             <FeatureCategoryGroup

@@ -167,7 +167,7 @@ export function AppHeader() {
       <Drawer
         anchor="right"
         open={drawerOpen}
-        onClose={/* istanbul ignore next */ () => setDrawerOpen(false)}
+        onClose={  () => setDrawerOpen(false)}
         slotProps={{ paper:{ sx: { width: 260 } }}}
       >
         <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", px: 2, py: 1.5 }}>
