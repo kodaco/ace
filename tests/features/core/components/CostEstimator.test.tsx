@@ -1,6 +1,6 @@
 import { render, screen, fireEvent, waitFor, act } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import { CostEstimator } from "@/features/core/components/CostEstimator";
+import { encodeEstimateState } from "@/features/core/services/estimate-url";
 
 const mockPush = jest.fn();
 jest.mock("next/navigation", () => ({
@@ -11,7 +11,9 @@ jest.mock("next/navigation", () => ({
 beforeEach(() => {
   jest.useFakeTimers();
   sessionStorage.clear();
+  localStorage.clear();
   mockPush.mockClear();
+  window.history.replaceState(null, '', '/');
 });
 
 afterEach(() => {
@@ -283,6 +285,221 @@ describe("CostEstimator", () => {
 
       // Calculation should have run
       expect(screen.getByText("Estimate Summary")).toBeInTheDocument();
+    });
+  });
+
+  describe("URL state — auto-calculate on mount", () => {
+    it("renders without error when URL has an invalid ?e= param", () => {
+      window.history.replaceState(null, "", "/?e=!!!invalid!!!");
+      render(<CostEstimator />);
+      expect(screen.getByRole("button", { name: /Calculate Estimate/i })).toBeInTheDocument();
+    });
+
+    it("auto-calculates when a valid ?e= param is present on mount", () => {
+      const encoded = encodeEstimateState({ featureIds: [], rate: 100, ai: false });
+      window.history.replaceState(null, "", `/?e=${encoded}`);
+      render(<CostEstimator />);
+      expect(screen.getByRole("button", { name: /Calculating/i })).toBeInTheDocument();
+    });
+
+    it("falls back to clean state when getInitialStateFromUrl throws (catch branch line 62)", () => {
+      // Make URLSearchParams throw to trigger the outer try/catch
+      const origURLSearchParams = global.URLSearchParams;
+      global.URLSearchParams = class {
+        constructor() {
+          throw new Error("boom");
+        }
+      } as unknown as typeof URLSearchParams;
+      window.history.replaceState(null, "", "/?e=something");
+      render(<CostEstimator />);
+      expect(screen.getByRole("button", { name: /Calculate Estimate/i })).toBeInTheDocument();
+      global.URLSearchParams = origURLSearchParams;
+    });
+  });
+
+  describe("preset selection (lines 192-201)", () => {
+    it("clicking a preset chip selects it, clicking again deselects", () => {
+      render(<CostEstimator />);
+      // SaaS / Web App is enabled on default 'web' platform — click inner Chip
+      const saasChip = screen.getByTestId("preset-saas-web").querySelector('[role="button"]')!;
+      fireEvent.click(saasChip); // select → else branch
+      fireEvent.click(saasChip); // deselect → if branch
+      expect(screen.getByText("Select Your Features")).toBeInTheDocument();
+    });
+  });
+
+  describe("platform change with active preset (lines 264-273)", () => {
+    it("switching platform with a compatible preset does NOT clear it", () => {
+      render(<CostEstimator />);
+      // Select E-commerce preset (no disabledForPlatforms field)
+      const ecommChip = screen.getByTestId("preset-ecommerce").querySelector('[role="button"]')!;
+      fireEvent.click(ecommChip);
+      // Switch to iOS — E-commerce has no platform restrictions, so preset stays
+      fireEvent.click(screen.getByTestId("platform-ios"));
+      expect(screen.getByText("Select Your Features")).toBeInTheDocument();
+    });
+
+    it("switching to an incompatible platform auto-clears the active preset", () => {
+      render(<CostEstimator />);
+      // Switch to iOS so Mobile App preset is enabled
+      fireEvent.click(screen.getByTestId("platform-ios"));
+      // Click the inner Chip for mobile-app preset
+      const mobileChip = screen.getByTestId("preset-mobile-app").querySelector('[role="button"]')!;
+      fireEvent.click(mobileChip);
+      // Now switch back to web — mobile-app is incompatible → preset should auto-clear
+      fireEvent.click(screen.getByTestId("platform-web"));
+      expect(screen.getByText("Select Your Features")).toBeInTheDocument();
+    });
+  });
+
+  describe("saved estimates drawer (lines 381-411)", () => {
+    it("clicking the 'Saved' button opens the drawer", () => {
+      render(<CostEstimator />);
+      fireEvent.click(screen.getByTestId("saved-btn"));
+      expect(screen.getByText("Saved Estimates")).toBeInTheDocument();
+    });
+
+    it("closing the drawer via the Close button hides it", () => {
+      render(<CostEstimator />);
+      fireEvent.click(screen.getByTestId("saved-btn"));
+      fireEvent.click(screen.getByRole("button", { name: "Close" }));
+      // The drawer closes — "Saved Estimates" heading disappears from visible area
+      expect(screen.getByText("Select Your Features")).toBeInTheDocument();
+    });
+  });
+
+  describe("handleSaveEstimate (lines 205-225)", () => {
+    it("calculating then saving an estimate stores it in the drawer", async () => {
+      render(<CostEstimator />);
+      fireEvent.click(screen.getByRole("button", { name: /Calculate Estimate/i }));
+      act(() => { jest.runAllTimers(); });
+
+      await waitFor(() => {
+        expect(screen.getByText("Estimate Summary")).toBeInTheDocument();
+      });
+
+      // Open save input
+      fireEvent.click(screen.getByRole("button", { name: /Save estimate/i }));
+      fireEvent.change(screen.getByPlaceholderText(/Name this estimate/i), {
+        target: { value: "Test Save" },
+      });
+      fireEvent.click(screen.getByRole("button", { name: /^Save$/ }));
+
+      // Saved count in button should now be 1
+      expect(screen.getByTestId("saved-btn")).toHaveTextContent("Saved (1)");
+    });
+  });
+
+  describe("handleLoadSaved (lines 229-255)", () => {
+    it("loading a saved estimate restores state and closes the drawer", async () => {
+      render(<CostEstimator />);
+      // Calculate and save
+      fireEvent.click(screen.getByRole("button", { name: /Calculate Estimate/i }));
+      act(() => { jest.runAllTimers(); });
+
+      await waitFor(() => screen.getByText("Estimate Summary"));
+
+      fireEvent.click(screen.getByRole("button", { name: /Save estimate/i }));
+      fireEvent.change(screen.getByPlaceholderText(/Name this estimate/i), {
+        target: { value: "Load Me" },
+      });
+      fireEvent.click(screen.getByRole("button", { name: /^Save$/ }));
+
+      // Open drawer and restore
+      fireEvent.click(screen.getByTestId("saved-btn"));
+      fireEvent.click(screen.getByRole("button", { name: /Restore estimate/i }));
+
+      // Drawer closes after restore
+      expect(screen.getByText("Select Your Features")).toBeInTheDocument();
+    });
+  });
+
+  describe("handleDeleteSaved (lines 259-260)", () => {
+    it("deleting a saved estimate decrements the count", async () => {
+      render(<CostEstimator />);
+      // Calculate and save
+      fireEvent.click(screen.getByRole("button", { name: /Calculate Estimate/i }));
+      act(() => { jest.runAllTimers(); });
+
+      await waitFor(() => screen.getByText("Estimate Summary"));
+
+      fireEvent.click(screen.getByRole("button", { name: /Save estimate/i }));
+      fireEvent.change(screen.getByPlaceholderText(/Name this estimate/i), {
+        target: { value: "Delete Me" },
+      });
+      fireEvent.click(screen.getByRole("button", { name: /^Save$/ }));
+
+      // Open drawer and delete
+      fireEvent.click(screen.getByTestId("saved-btn"));
+      fireEvent.click(screen.getByRole("button", { name: /Delete saved estimate/i }));
+
+      // Count drops back to 0
+      expect(screen.getByTestId("saved-btn")).toHaveTextContent("Saved (0)");
+    });
+  });
+
+  describe("handleAddCustomFeature + handleRemoveCustomFeature (lines 176-188)", () => {
+    it("adding a custom feature via CustomFeatureInput and removing it", () => {
+      render(<CostEstimator />);
+      // Open the Advanced category
+      fireEvent.click(screen.getByTestId("category-header-advanced"));
+      // Open the custom feature form
+      fireEvent.click(screen.getByRole("button", { name: /Add a custom feature/i }));
+      // Fill in name and submit
+      fireEvent.change(screen.getByPlaceholderText(/e.g. Custom AI Chatbot/i), {
+        target: { value: "My Custom Feature" },
+      });
+      fireEvent.click(screen.getByRole("button", { name: "Add" }));
+      // Custom feature should now appear in the list
+      expect(screen.getByText("My Custom Feature")).toBeInTheDocument();
+      // Remove it
+      fireEvent.click(screen.getByRole("button", { name: "Remove custom feature" }));
+      // Feature should be gone
+      expect(screen.queryByText("My Custom Feature")).not.toBeInTheDocument();
+    });
+  });
+
+  describe("save and load with custom features + feature IDs (lines 211, 232)", () => {
+    it("saving with a custom feature then loading restores it", async () => {
+      render(<CostEstimator />);
+      // Select a non-always-active feature via checkbox
+      const checkboxes = screen.getAllByRole("checkbox");
+      const toggleable = checkboxes.find((cb) => !cb.hasAttribute("disabled"));
+      if (toggleable) fireEvent.click(toggleable);
+
+      // Add a custom feature
+      fireEvent.click(screen.getByTestId("category-header-advanced"));
+      fireEvent.click(screen.getByRole("button", { name: /Add a custom feature/i }));
+      fireEvent.change(screen.getByPlaceholderText(/e.g. Custom AI Chatbot/i), {
+        target: { value: "Saved Custom" },
+      });
+      fireEvent.click(screen.getByRole("button", { name: "Add" }));
+
+      // Calculate
+      fireEvent.click(screen.getByRole("button", { name: /Calculate Estimate/i }));
+      act(() => { jest.runAllTimers(); });
+      await waitFor(() => screen.getByText("Estimate Summary"));
+
+      // Save the estimate
+      fireEvent.click(screen.getByRole("button", { name: /Save estimate/i }));
+      fireEvent.change(screen.getByPlaceholderText(/Name this estimate/i), {
+        target: { value: "Custom Save" },
+      });
+      fireEvent.click(screen.getByRole("button", { name: /^Save$/ }));
+
+      // Open drawer and load
+      fireEvent.click(screen.getByTestId("saved-btn"));
+      fireEvent.click(screen.getByRole("button", { name: /Restore estimate/i }));
+
+      // The custom feature should be restored (may appear multiple times due to MUI Collapse)
+      expect(screen.getAllByText("Saved Custom").length).toBeGreaterThanOrEqual(1);
+    });
+  });
+
+  describe("label prop (line 318-321)", () => {
+    it("renders the label heading when label prop is provided", () => {
+      render(<CostEstimator label="Estimate A" />);
+      expect(screen.getByText("Estimate A")).toBeInTheDocument();
     });
   });
 

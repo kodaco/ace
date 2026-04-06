@@ -28,6 +28,10 @@ export function CustomFeatureInput({ onAdd }: CustomFeatureInputProps) {
   const [name, setName] = useState("");
   const [size, setSize] = useState<FeatureSize>("medium");
 
+  const handleSizeChange = (_: React.SyntheticEvent, v: FeatureSize | null) => {
+    if (v) setSize(v);
+  };
+
   const handleAdd = () => {
     const trimmed = name.trim();
     if (!trimmed) return;
@@ -87,7 +91,7 @@ export function CustomFeatureInput({ onAdd }: CustomFeatureInputProps) {
             <ToggleButtonGroup
               value={size}
               exclusive
-              onChange={(_, v) => { if (v) setSize(v); }}
+              onChange={handleSizeChange}
               size="small"
               sx={{ mb: 1.5, flexWrap: "wrap", gap: 0.5 }}
             >

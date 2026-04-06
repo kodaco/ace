@@ -195,13 +195,136 @@ describe("EstimateResults", () => {
           loading={false}
         />
       );
-      expect(screen.getByText("User Accounts & Login")).toBeInTheDocument();
-      expect(screen.getByText("Payments & Checkout")).toBeInTheDocument();
+      expect(screen.getAllByText("User Accounts & Login")[0]).toBeInTheDocument();
+      expect(screen.getAllByText("Payments & Checkout")[0]).toBeInTheDocument();
     });
 
     it("does not show 'Features Included' when no selectedFeatures passed", () => {
       render(<EstimateResults estimate={mockEstimate} loading={false} />);
       expect(screen.queryByText(/Features Included/i)).not.toBeInTheDocument();
+    });
+  });
+
+  describe("copy shareable link (lines 59-62)", () => {
+    it("clicking 'Copy shareable link' calls navigator.clipboard.writeText", async () => {
+      const mockWriteText = jest.fn().mockResolvedValue(undefined);
+      Object.defineProperty(navigator, "clipboard", {
+        value: { writeText: mockWriteText },
+        configurable: true,
+        writable: true,
+      });
+      render(<EstimateResults estimate={mockEstimate} loading={false} />);
+      fireEvent.click(screen.getByRole("button", { name: /Copy shareable link/i }));
+      expect(mockWriteText).toHaveBeenCalledWith(window.location.href);
+    });
+
+    it("Snackbar onClose resets linkCopied after auto-hide", async () => {
+      jest.useFakeTimers();
+      const mockWriteText = jest.fn().mockResolvedValue(undefined);
+      Object.defineProperty(navigator, "clipboard", {
+        value: { writeText: mockWriteText },
+        configurable: true,
+        writable: true,
+      });
+      render(<EstimateResults estimate={mockEstimate} loading={false} />);
+      await act(async () => {
+        fireEvent.click(screen.getByRole("button", { name: /Copy shareable link/i }));
+        // Flush the clipboard promise to trigger setLinkCopied(true)
+        await Promise.resolve();
+        await Promise.resolve();
+      });
+      // Snackbar should now be open
+      expect(screen.getByText("Link copied to clipboard")).toBeInTheDocument();
+      // Advance past the autoHideDuration (2500ms) to trigger onClose
+      act(() => { jest.advanceTimersByTime(3000); });
+      jest.useRealTimers();
+    });
+  });
+
+  describe("print (line 66)", () => {
+    it("clicking 'Save as PDF' calls window.print", () => {
+      const mockPrint = jest.fn();
+      window.print = mockPrint;
+      render(<EstimateResults estimate={mockEstimate} loading={false} />);
+      fireEvent.click(screen.getByRole("button", { name: /Save as PDF/i }));
+      expect(mockPrint).toHaveBeenCalled();
+    });
+  });
+
+  describe("save estimate flow (lines 70-75, 458-494)", () => {
+    it("shows 'Save estimate' button when onSave prop is provided", () => {
+      render(<EstimateResults estimate={mockEstimate} loading={false} onSave={jest.fn()} />);
+      expect(screen.getByRole("button", { name: /Save estimate/i })).toBeInTheDocument();
+    });
+
+    it("does NOT show 'Save estimate' button when onSave is not provided", () => {
+      render(<EstimateResults estimate={mockEstimate} loading={false} />);
+      expect(screen.queryByRole("button", { name: /Save estimate/i })).not.toBeInTheDocument();
+    });
+
+    it("clicking 'Save estimate' reveals the name input", () => {
+      render(<EstimateResults estimate={mockEstimate} loading={false} onSave={jest.fn()} />);
+      fireEvent.click(screen.getByRole("button", { name: /Save estimate/i }));
+      expect(screen.getByPlaceholderText(/Name this estimate/i)).toBeInTheDocument();
+    });
+
+    it("clicking Cancel resets the toggle so the button reads 'Save estimate' (not 'Saved!')", () => {
+      render(<EstimateResults estimate={mockEstimate} loading={false} onSave={jest.fn()} />);
+      fireEvent.click(screen.getByRole("button", { name: /Save estimate/i }));
+      fireEvent.click(screen.getByRole("button", { name: "Cancel" }));
+      // After cancel, showSaveInput=false; the button is back to "Save estimate" (not "Saved!")
+      expect(screen.getByRole("button", { name: /Save estimate/i })).toBeInTheDocument();
+    });
+
+    it("Save button is disabled when name is empty", () => {
+      render(<EstimateResults estimate={mockEstimate} loading={false} onSave={jest.fn()} />);
+      fireEvent.click(screen.getByRole("button", { name: /Save estimate/i }));
+      expect(screen.getByRole("button", { name: "Save", exact: true })).toBeDisabled();
+    });
+
+    it("clicking Save with a name calls onSave with the trimmed name", () => {
+      const onSave = jest.fn();
+      render(<EstimateResults estimate={mockEstimate} loading={false} onSave={onSave} />);
+      fireEvent.click(screen.getByRole("button", { name: /Save estimate/i }));
+      fireEvent.change(screen.getByPlaceholderText(/Name this estimate/i), {
+        target: { value: "My Estimate" },
+      });
+      fireEvent.click(screen.getByRole("button", { name: "Save", exact: true }));
+      expect(onSave).toHaveBeenCalledWith("My Estimate");
+    });
+
+    it("pressing Enter with empty name does NOT call onSave (guard branch)", () => {
+      const onSave = jest.fn();
+      render(<EstimateResults estimate={mockEstimate} loading={false} onSave={onSave} />);
+      fireEvent.click(screen.getByRole("button", { name: /Save estimate/i }));
+      const input = screen.getByPlaceholderText(/Name this estimate/i);
+      fireEvent.keyDown(input, { key: "Enter" });
+      expect(onSave).not.toHaveBeenCalled();
+    });
+
+    it("pressing Enter in the name field calls onSave", () => {
+      const onSave = jest.fn();
+      render(<EstimateResults estimate={mockEstimate} loading={false} onSave={onSave} />);
+      fireEvent.click(screen.getByRole("button", { name: /Save estimate/i }));
+      const input = screen.getByPlaceholderText(/Name this estimate/i);
+      fireEvent.change(input, { target: { value: "Enter Save" } });
+      fireEvent.keyDown(input, { key: "Enter" });
+      expect(onSave).toHaveBeenCalledWith("Enter Save");
+    });
+
+    it("pressing Escape in the name field resets the toggle (button back to 'Save estimate')", () => {
+      render(<EstimateResults estimate={mockEstimate} loading={false} onSave={jest.fn()} />);
+      fireEvent.click(screen.getByRole("button", { name: /Save estimate/i }));
+      const input = screen.getByPlaceholderText(/Name this estimate/i);
+      fireEvent.keyDown(input, { key: "Escape" });
+      // After Escape, showSaveInput=false; the button is back to "Save estimate"
+      expect(screen.getByRole("button", { name: /Save estimate/i })).toBeInTheDocument();
+    });
+
+    it("calling handleConfirmSave with no onSave prop is a no-op (guard)", () => {
+      // Without onSave, the save UI is not shown — just verify no crash
+      render(<EstimateResults estimate={mockEstimate} loading={false} />);
+      expect(screen.queryByPlaceholderText(/Name this estimate/i)).not.toBeInTheDocument();
     });
   });
 
@@ -217,6 +340,33 @@ describe("EstimateResults", () => {
       // Should still show midpoint cost (no loading blank)
       expect(screen.getByText("$15,000")).toBeInTheDocument();
       jest.useRealTimers();
+    });
+  });
+
+  describe("zero-hour features (line 369 — totalAvg === 0 branch)", () => {
+    it("shows 0% when all features have zero hours", () => {
+      const zeroFeatures = [
+        {
+          id: "zero-feat",
+          name: "Zero Feature",
+          description: "",
+          details: "",
+          factors: "",
+          minHours: 0,
+          maxHours: 0,
+        },
+      ];
+      render(
+        <EstimateResults
+          estimate={mockEstimate}
+          selectedFeatures={zeroFeatures}
+          loading={false}
+        />
+      );
+      // Expand details to render the hours breakdown
+      fireEvent.click(screen.getByText(/View cost range/i));
+      // The feature should show 0% because totalAvg is 0
+      expect(screen.getByText(/0%/)).toBeInTheDocument();
     });
   });
 

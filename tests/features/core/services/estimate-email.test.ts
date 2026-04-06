@@ -1,4 +1,4 @@
-import { shareEstimateByEmail } from "@/features/core/services/estimate-email";
+import { shareEstimateByEmail, apiStrategy } from "@/features/core/services/estimate-email";
 
 // ─── Browser API mocks ────────────────────────────────────────────────────────
 const mockOpen = jest.fn();
@@ -123,6 +123,14 @@ describe("shareEstimateByEmail", () => {
     it("still creates a blob URL when toEmail is empty", () => {
       shareEstimateByEmail(mockEstimate, mockFeatures, "");
       expect(mockCreateObjectURL).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe("apiStrategy (stub — not yet configured)", () => {
+    it("throws an error explaining the strategy is not configured", async () => {
+      await expect(
+        apiStrategy(mockEstimate, mockFeatures, "test@example.com")
+      ).rejects.toThrow("API email strategy is not yet configured");
     });
   });
 

@@ -135,7 +135,7 @@ export function CostEstimator({ label }: CostEstimatorProps = {}) {
   };
 
   const handleToggleFeature = (featureId: string) => {
-    /* istanbul ignore next */
+     
     if (alwaysActiveIds.has(featureId)) return;
     setActivePresetId(null);
     setSelectedFeatureIds((prev) => {
