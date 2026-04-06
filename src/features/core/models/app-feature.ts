@@ -1,3 +1,11 @@
+export type FeatureCategory =
+  | "core"
+  | "communication"
+  | "commerce"
+  | "data"
+  | "platform"
+  | "advanced";
+
 export interface AppFeature {
   id: string;
   name: string;
@@ -7,4 +15,5 @@ export interface AppFeature {
   minHours: number;
   maxHours: number;
   alwaysActive?: boolean;
+  category?: FeatureCategory;
 }

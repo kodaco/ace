@@ -5,21 +5,18 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
 import Typography from "@mui/material/Typography";
-import Link from "next/link";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import { CURRENCIES, Currency } from "@/features/core/data/currencies";
 
 interface HourlyRateInputProps {
   value: number;
   onChange: (rate: number) => void;
+  currency: Currency;
+  onCurrencyChange: (currency: Currency) => void;
 }
 
-const currencyFormatter = new Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: "USD",
-  minimumFractionDigits: 0,
-  maximumFractionDigits: 0,
-});
-
-export function HourlyRateInput({ value, onChange }: HourlyRateInputProps) {
+export function HourlyRateInput({ value, onChange, currency, onCurrencyChange }: HourlyRateInputProps) {
   const [editing, setEditing] = useState(false);
   const [inputValue, setInputValue] = useState(String(value));
 
@@ -48,20 +45,22 @@ export function HourlyRateInput({ value, onChange }: HourlyRateInputProps) {
           <Typography variant="subtitle1" fontWeight={600}>
             Hourly Rate
           </Typography>
-          {/* <Typography
-            component={Link}
-            href="/providers"
-            variant="body2"
-            sx={{
-              color: "primary.main",
-              fontWeight: 500,
-              fontSize: "0.8rem",
-              textDecoration: "none",
-              "&:hover": { textDecoration: "underline" },
+          <Select
+            value={currency.code}
+            onChange={(e) => {
+              const next = CURRENCIES.find((c) => c.code === e.target.value);
+              if (next) onCurrencyChange(next);
             }}
+            size="small"
+            variant="outlined"
+            sx={{ fontSize: "0.8rem", height: 32, minWidth: 90 }}
           >
-            View provider rates →
-          </Typography> */}
+            {CURRENCIES.map((c) => (
+              <MenuItem key={c.code} value={c.code} sx={{ fontSize: "0.8rem" }}>
+                {c.code} — {c.symbol}
+              </MenuItem>
+            ))}
+          </Select>
         </Box>
 
         {editing ? (
@@ -77,7 +76,7 @@ export function HourlyRateInput({ value, onChange }: HourlyRateInputProps) {
               autoFocus
               slotProps={{
                 input: {
-                  startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                  startAdornment: <InputAdornment position="start">{currency.symbol}</InputAdornment>,
                   endAdornment: <InputAdornment position="end">/ hr</InputAdornment>,
                 },
               }}
@@ -101,7 +100,8 @@ export function HourlyRateInput({ value, onChange }: HourlyRateInputProps) {
         ) : (
           <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
             <Typography variant="h6" fontWeight={700} sx={{ color: "primary.dark" }}>
-              {currencyFormatter.format(value)}<Typography component="span" variant="body2" color="text.secondary" fontWeight={400}> / hr</Typography>
+              {currency.symbol}{value.toLocaleString()}
+              <Typography component="span" variant="body2" color="text.secondary" fontWeight={400}> / hr</Typography>
             </Typography>
             <Button
               size="small"
@@ -113,10 +113,6 @@ export function HourlyRateInput({ value, onChange }: HourlyRateInputProps) {
             </Button>
           </Box>
         )}
-
-        {/* <Typography variant="caption" color="text.secondary" sx={{ display: "block", mt: 1.5, lineHeight: 1.5 }}>
-          Not sure what to enter? View local provider rates to see what teams in your area typically charge.
-        </Typography> */}
       </Box>
     </Card>
   );
