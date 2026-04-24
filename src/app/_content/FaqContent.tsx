@@ -72,11 +72,11 @@ const FAQS = [
     questions: [
       {
         q: "How long does it actually take to build an app?",
-        a: "A focused app with five to eight features typically takes three to five months from start to a working product. That's assuming the requirements are clear and there aren't major changes along the way. Add at least four to six weeks on top of that for app store submission, review, and launch prep. Most projects take longer than expected, so building buffer into your timeline is always a good idea.",
+        a: "A focused app with five to eight features typically takes three to five months from start to a working product. That's assuming the requirements are clear and there aren't major changes along the way. Mobile apps need an additional four to six weeks for app store submission, review, and launch prep. Web apps typically need about two weeks for infrastructure setup and final validation. Most projects take longer than expected, so building buffer into your timeline is always a good idea.",
       },
       {
         q: "How do I get my app into the App Store or Google Play?",
-        a: "You or your developer submit the app for review once it's ready. Apple's App Store review typically takes one to three days but can occasionally stretch longer if there are questions. Google Play is usually faster. The review process checks that your app follows platform guidelines and doesn't have obvious technical issues. Plan for at least four weeks of total launch prep time to account for review feedback, any required fixes, and unexpected delays.",
+        a: "You or your developer submit the app for review once it's ready. Apple's App Store review typically takes one to three days but can occasionally stretch longer if there are questions. Google Play is usually faster. The review process checks that your app follows platform guidelines and doesn't have obvious technical issues. Plan for at least four weeks of total launch prep time for mobile apps to account for review feedback, any required fixes, and unexpected delays. Web apps typically need about two weeks for infrastructure setup and final validation before launch.",
       },
     ],
   },

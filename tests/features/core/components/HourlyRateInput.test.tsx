@@ -190,6 +190,19 @@ describe("HourlyRateInput", () => {
       );
     });
 
+    it("does not call onCurrencyChange when an invalid currency value is selected", async () => {
+      const onCurrencyChange = jest.fn();
+      render(<HourlyRateInput {...defaultProps} onCurrencyChange={onCurrencyChange} />);
+
+      // Fire a change event directly on the hidden native input with an invalid value
+      const select = screen.getByRole("combobox");
+      const hiddenInput = select.querySelector('input[type="hidden"]');
+      if (hiddenInput) {
+        fireEvent.change(hiddenInput, { target: { value: "ZZZ" } });
+      }
+
+      expect(onCurrencyChange).not.toHaveBeenCalled();
+    });
   });
 
   describe("invalid input", () => {
