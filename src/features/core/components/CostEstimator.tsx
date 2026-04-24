@@ -121,7 +121,6 @@ export function CostEstimator({ label }: CostEstimatorProps = {}) {
     if (storedId) {
       const provider = PROVIDERS.find((p) => p.id === storedId) ?? null;
       if (provider) {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
         setSelectedProvider(provider);
         setHourlyRate(provider.hourlyRate);
       }

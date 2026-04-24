@@ -103,7 +103,6 @@ describe("calculateEstimate", () => {
   describe("AI mode", () => {
     it("reduces dev hours by AI_DEV_MULTIPLIER", () => {
       const feature = makeFeature({ minHours: 100, maxHours: 200 });
-      const standard = calculateEstimate([feature], 100, false);
       const ai = calculateEstimate([feature], 100, true);
 
       expect(ai.totalMinHours).toBe(Math.round(100 * AI_DEV_MULTIPLIER));

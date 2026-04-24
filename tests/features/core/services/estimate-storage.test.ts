@@ -37,7 +37,7 @@ describe("estimate-storage", () => {
 
     it("returns empty array when window is undefined (SSR guard)", () => {
       const originalWindow = global.window;
-      // @ts-ignore
+      // @ts-expect-error — intentionally setting window to undefined for SSR guard test
       global.window = undefined;
       try {
         expect(getSavedEstimates()).toEqual([]);
