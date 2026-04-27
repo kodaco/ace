@@ -6,11 +6,10 @@ import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import IconButton from "@mui/material/IconButton";
 import Button from "@mui/material/Button";
-import Divider from "@mui/material/Divider";
 import CloseIcon from "@mui/icons-material/Close";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
-import { SavedEstimate, deleteSavedEstimate } from "@/features/core/services/estimate-storage";
+import { SavedEstimate } from "@/features/core/services/estimate-storage";
 import { CURRENCIES } from "@/features/core/data/currencies";
 
 interface SavedEstimatesDrawerProps {

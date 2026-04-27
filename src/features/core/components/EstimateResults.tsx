@@ -24,6 +24,13 @@ import CheckIcon from "@mui/icons-material/Check";
 import TextField from "@mui/material/TextField";
 import { AppFeature, EstimateResult } from "@/features/core/models";
 import { Currency, DEFAULT_CURRENCY } from "@/features/core/data/currencies";
+import { Platform } from "./PlatformSelector";
+
+const MOBILE_BUFFER_WEEKS = 4;
+const WEB_BUFFER_WEEKS = 2;
+
+const getBufferWeeks = (platform: Platform) =>
+  platform === "web" ? WEB_BUFFER_WEEKS : MOBILE_BUFFER_WEEKS;
 
 type EstimateMode = "low" | "mid" | "high";
 
@@ -33,6 +40,7 @@ interface EstimateResultsProps {
   loading?: boolean;
   currency?: Currency;
   onSave?: (name: string) => void;
+  platform?: Platform;
 }
 
 function formatCost(usdAmount: number, currency: Currency): string {
@@ -47,7 +55,7 @@ function formatWeeks(weeks: number): string {
   return `${Math.ceil(weeks)} weeks`;
 }
 
-export function EstimateResults({ estimate, selectedFeatures = [], loading, currency = DEFAULT_CURRENCY, onSave }: EstimateResultsProps) {
+export function EstimateResults({ estimate, selectedFeatures = [], loading, currency = DEFAULT_CURRENCY, onSave, platform = "web" }: EstimateResultsProps) {
   const [expanded, setExpanded] = useState(false);
   const [mode, setMode] = useState<EstimateMode>("mid");
   const [valuesLoading, setValuesLoading] = useState(false);
@@ -213,8 +221,9 @@ export function EstimateResults({ estimate, selectedFeatures = [], loading, curr
                 <Box component="span" sx={{ fontWeight: 600, color: "text.primary" }}>
                   Plan for launch prep.
                 </Box>{" "}
-                App store reviews and web hosting setup typically take at least 4 weeks on top of
-                your build time.
+                {platform === "web"
+                  ? "Infrastructure setup and final validation typically take about 2 weeks on top of your build time."
+                  : "App store reviews and web hosting setup typically take at least 4 weeks on top of your build time."}
               </Typography>
               <Box
                 sx={{
@@ -230,11 +239,11 @@ export function EstimateResults({ estimate, selectedFeatures = [], loading, curr
                 </Box>
                 <Typography variant="body2" color="text.secondary">+</Typography>
                 <Box sx={{ px: 1, py: 0.4, borderRadius: 1, bgcolor: "rgba(99,102,241,0.1)", color: "primary.main", fontWeight: 600, fontSize: "inherit" }}>
-                  4 weeks prep
+                  {getBufferWeeks(platform)} weeks prep
                 </Box>
                 <Typography variant="body2" color="text.secondary">=</Typography>
                 <Box sx={{ px: 1, py: 0.4, borderRadius: 1, bgcolor: "primary.main", color: "#fff", fontWeight: 700, fontSize: "inherit" }}>
-                  {formatWeeks(displayWeeks + 4)} to launch
+                  {formatWeeks(displayWeeks + getBufferWeeks(platform))} to launch
                 </Box>
               </Box>
             </Box>

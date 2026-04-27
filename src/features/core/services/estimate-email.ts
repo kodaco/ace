@@ -1,9 +1,16 @@
 import { AppFeature, EstimateResult } from "@/features/core/models";
+import { Platform } from "@/features/core/components/PlatformSelector";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Active strategy — change this to "api" once you have an email provider set up
 // ─────────────────────────────────────────────────────────────────────────────
 const ACTIVE_STRATEGY: "mailto" | "api" = "mailto";
+
+const MOBILE_BUFFER_WEEKS = 4;
+const WEB_BUFFER_WEEKS = 2;
+
+const getBufferWeeks = (platform: Platform) =>
+  platform === "web" ? WEB_BUFFER_WEEKS : MOBILE_BUFFER_WEEKS;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Formatters
@@ -35,10 +42,12 @@ function buildHtmlPage(
   estimate: EstimateResult,
   selectedFeatures: AppFeature[],
   toEmail: string,
+  platform: Platform,
 ): string {
   const avgCost = Math.round((estimate.minCost + estimate.maxCost) / 2);
   const avgWeeks = (estimate.minWeeks + estimate.maxWeeks) / 2;
-  const launchWeeks = avgWeeks + 4;
+  const bufferWeeks = getBufferWeeks(platform);
+  const launchWeeks = avgWeeks + bufferWeeks;
 
   const featureChips = selectedFeatures
     .map(
@@ -257,12 +266,14 @@ function buildHtmlPage(
       <div class="launch-body">
         <p class="launch-text">
           <strong>Plan for launch prep.</strong>
-          App store reviews and web hosting setup typically take at least 4 weeks on top of your build time.
+          ${platform === "web"
+            ? "Infrastructure setup and final validation typically take about 2 weeks on top of your build time."
+            : "App store reviews and web hosting setup typically take at least 4 weeks on top of your build time."}
         </p>
         <div class="launch-equation">
           <span class="pill">${formatWeeks(avgWeeks)} build</span>
           <span class="eq-op">+</span>
-          <span class="pill">4 weeks prep</span>
+          <span class="pill">${bufferWeeks} weeks prep</span>
           <span class="eq-op">=</span>
           <span class="pill-dark">${formatWeeks(launchWeeks)} to launch</span>
         </div>
@@ -310,8 +321,9 @@ function mailtoStrategy(
   estimate: EstimateResult,
   selectedFeatures: AppFeature[],
   toEmail: string,
+  platform: Platform,
 ): void {
-  const html = buildHtmlPage(estimate, selectedFeatures, toEmail);
+  const html = buildHtmlPage(estimate, selectedFeatures, toEmail, platform);
   const blob = new Blob([html], { type: "text/html" });
   const url = URL.createObjectURL(blob);
   window.open(url, "_blank");
@@ -335,6 +347,7 @@ export async function apiStrategy(
   _estimate: EstimateResult,
   _selectedFeatures: AppFeature[],
   _toEmail: string,
+  _platform: Platform,
 ): Promise<void> {
   // TODO: uncomment and fill in when your email provider is ready:
   //
@@ -356,11 +369,12 @@ export function shareEstimateByEmail(
   estimate: EstimateResult,
   selectedFeatures: AppFeature[],
   toEmail: string,
+  platform: Platform,
 ): void {
   if (ACTIVE_STRATEGY === "mailto") {
-    mailtoStrategy(estimate, selectedFeatures, toEmail);
+    mailtoStrategy(estimate, selectedFeatures, toEmail, platform);
   } else {
      
-    void apiStrategy(estimate, selectedFeatures, toEmail);
+    void apiStrategy(estimate, selectedFeatures, toEmail, platform);
   }
 }

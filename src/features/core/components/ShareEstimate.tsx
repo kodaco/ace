@@ -11,18 +11,20 @@ import Skeleton from "@mui/material/Skeleton";
 import EmailIcon from "@mui/icons-material/Email";
 import { AppFeature, EstimateResult } from "@/features/core/models";
 import { shareEstimateByEmail } from "@/features/core/services/estimate-email";
+import { Platform } from "./PlatformSelector";
 
 interface ShareEstimateProps {
   estimate: EstimateResult | null;
   selectedFeatures: AppFeature[];
   loading?: boolean;
+  platform?: Platform;
 }
 
-export function ShareEstimate({ estimate, selectedFeatures, loading }: ShareEstimateProps) {
+export function ShareEstimate({ estimate, selectedFeatures, loading, platform = "web" }: ShareEstimateProps) {
   const [toEmail, setToEmail] = useState("");
 
   const handleShare = () => {
-    shareEstimateByEmail(estimate!, selectedFeatures, toEmail);
+    shareEstimateByEmail(estimate!, selectedFeatures, toEmail, platform);
   };
 
   return (

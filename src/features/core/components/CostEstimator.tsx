@@ -121,7 +121,6 @@ export function CostEstimator({ label }: CostEstimatorProps = {}) {
     if (storedId) {
       const provider = PROVIDERS.find((p) => p.id === storedId) ?? null;
       if (provider) {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
         setSelectedProvider(provider);
         setHourlyRate(provider.hourlyRate);
       }
@@ -393,13 +392,14 @@ export function CostEstimator({ label }: CostEstimatorProps = {}) {
               transition: `transform ${FADE_MS}ms cubic-bezier(0.16, 1, 0.3, 1)`,
             }}
           >
-            <Stack spacing={3}>
+              <Stack spacing={3}>
               <EstimateResults
                 estimate={estimate}
                 selectedFeatures={selectedFeaturesSnapshot}
                 loading={showSkeleton}
                 currency={currency}
                 onSave={handleSaveEstimate}
+                platform={platform}
               />
             </Stack>
           </Box>

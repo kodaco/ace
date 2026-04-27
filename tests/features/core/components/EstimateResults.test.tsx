@@ -279,7 +279,7 @@ describe("EstimateResults", () => {
     it("Save button is disabled when name is empty", () => {
       render(<EstimateResults estimate={mockEstimate} loading={false} onSave={jest.fn()} />);
       fireEvent.click(screen.getByRole("button", { name: /Save estimate/i }));
-      expect(screen.getByRole("button", { name: "Save", exact: true })).toBeDisabled();
+      expect(screen.getByRole("button", { name: "Save" })).toBeDisabled();
     });
 
     it("clicking Save with a name calls onSave with the trimmed name", () => {
@@ -289,7 +289,7 @@ describe("EstimateResults", () => {
       fireEvent.change(screen.getByPlaceholderText(/Name this estimate/i), {
         target: { value: "My Estimate" },
       });
-      fireEvent.click(screen.getByRole("button", { name: "Save", exact: true }));
+      fireEvent.click(screen.getByRole("button", { name: "Save" }));
       expect(onSave).toHaveBeenCalledWith("My Estimate");
     });
 
@@ -388,6 +388,19 @@ describe("EstimateResults", () => {
       render(<EstimateResults estimate={null} loading={false} />);
       // No cost text shown since there's no estimate
       expect(screen.queryByText(/\/hr rate/)).not.toBeInTheDocument();
+    });
+  });
+
+  describe("platform-specific launch prep (non-web)", () => {
+    it("shows iOS launch prep text when platform is ios", () => {
+      render(<EstimateResults estimate={mockEstimate} loading={false} platform="ios" />);
+      expect(screen.getByText(/App store reviews/)).toBeInTheDocument();
+    });
+
+    it("shows iOS launch prep text inside expanded details when platform is ios", () => {
+      render(<EstimateResults estimate={mockEstimate} loading={false} platform="ios" />);
+      fireEvent.click(screen.getByText(/View cost range/i));
+      expect(screen.getByText(/App store reviews/)).toBeInTheDocument();
     });
   });
 });

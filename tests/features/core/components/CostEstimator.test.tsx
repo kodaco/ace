@@ -412,6 +412,35 @@ describe("CostEstimator", () => {
       // Drawer closes after restore
       expect(screen.getByText("Select Your Features")).toBeInTheDocument();
     });
+
+    it("falls back to DEFAULT_CURRENCY when saved estimate has unknown currency code", async () => {
+      // Seed localStorage with a saved estimate using an invalid currency code
+      const badEstimate = {
+        id: "save-12345",
+        name: "Bad Currency",
+        savedAt: new Date().toISOString(),
+        featureCount: 1,
+        midpointCost: 5000,
+        config: {
+          featureIds: [],
+          customFeatures: [],
+          rate: 100,
+          ai: false,
+          platform: "web",
+          currencyCode: "XXX",
+        },
+      };
+      localStorage.setItem("ace_saved_estimates", JSON.stringify([badEstimate]));
+
+      render(<CostEstimator />);
+
+      // Open drawer and restore
+      fireEvent.click(screen.getByTestId("saved-btn"));
+      fireEvent.click(screen.getByRole("button", { name: /Restore estimate/i }));
+
+      // Component should still render without crashing
+      expect(screen.getByText("Select Your Features")).toBeInTheDocument();
+    });
   });
 
   describe("handleDeleteSaved (lines 259-260)", () => {
